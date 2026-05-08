@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traxx X Code OS V3 - Desktop Preview</title>
+  <link rel="stylesheet" href="desktop-engine/tde-core/desktop.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+    rel="stylesheet">
+  <style>
+    /* Additional styles for web preview */
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    } 
+    .preview-banner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(90deg, #ff6b00, #e55d00);
+        color: white;
+        text-align: center;
+        padding: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 10000;
+    }
+    .preview-banner a {
+        color: white;
+        text-decoration: underline;
+    }
+    .desktop {
+        margin-top: 36px;
+        height: calc(100vh - 36px - 48px);
+    }
+  </style>
+  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body style="padding-top: 40px;">
+  <div class="preview-banner"><i class="fas fa-desktop"></i>
+    Traxx X Code OS V3 - Web Preview |
+    Created by <strong>Vincent Ganiza</strong> (Traxxion Tech) |
+    🇿🇼 Proudly Made in Zimbabwe
+  </div><!-- Desktop Area -->
+  <div id="desktop" class="desktop"><!-- Desktop Icons -->
+    <div class="desktop-icons">
+      <div data-app="files" class="desktop-icon">
+        <div class="icon-image"><i class="fas fa-folder"></i></div><span class="icon-label">Files</span>
+      </div>
+      <div data-app="browser" class="desktop-icon">
+        <div class="icon-image"><i class="fas fa-globe"></i></div><span class="icon-label">Browser</span>
+      </div>
+      <div data-app="terminal" class="desktop-icon">
+        <div class="icon-image"><i class="fas fa-terminal"></i></div><span class="icon-label">Terminal</span>
+      </div>
+      <div data-app="code-editor" class="desktop-icon">
+        <div class="icon-image"><i class="fas fa-code"></i></div><span class="icon-label">CodeForge</span>
+      </div>
+      <div data-app="sync-player" class="desktop-icon">
+        <div class="icon-image"><i class="fas fa-play-circle"></i></div><span class="icon-label">Sync Player</span>
+      </div>
+      <div data-app="traxx-store" class="desktop-icon">
+        <div class="icon-image"><i class="fas fa-store"></i></div><span class="icon-label">Traxx Store</span>
+      </div>
+      <div data-app="traxx-ai" class="desktop-icon">
+        <div class="icon-image"><i class="fas fa-robot"></i></div><span class="icon-label">Traxx AI</span>
+      </div>
+      <div data-app="settings" class="desktop-icon">
+        <div class="icon-image"><i class="fas fa-cog"></i></div><span class="icon-label">Settings</span>
+      </div>
+    </div><!-- Window Container -->
+    <div id="windows-container" class="windows-container"></div><!-- Traxx AI Widget -->
+    <div id="traxx-ai-widget" class="ai-widget minimized">
+      <div class="ai-widget-header"><span class="ai-widget-title"><i class="fas fa-robot"></i> Traxx AI
+        </span>
+        <div class="ai-widget-controls"><button class="widget-btn minimize-btn"><i class="fas fa-minus"></i></button>
+        </div>
+      </div>
+      <div class="ai-widget-content">
+        <div id="ai-chat-messages" class="ai-chat-messages">
+          <div class="ai-message system">
+            <p>Hello! I'm Traxx AI, your intelligent assistant. How can I help you today?</p>
+          </div>
+        </div>
+        <div class="ai-input-area"><input type="text" id="ai-input" placeholder="Ask Traxx AI..."
+            autocomplete="off" /><button id="ai-send-btn"><i class="fas fa-paper-plane"></i></button></div>
+      </div>
+    </div>
+  </div><!-- App Launcher -->
+  <div id="app-launcher" class="app-launcher hidden">
+    <div class="launcher-search"><i class="fas fa-search"></i><input type="text" id="launcher-search-input"
+        placeholder="Search apps, files, settings..." /></div>
+    <div class="launcher-content">
+      <div class="launcher-section">
+        <h3>Pinned Apps</h3>
+        <div id="pinned-apps" class="launcher-grid">
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-globe"></i></div><span class="app-name">Browser</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-terminal"></i></div><span class="app-name">Terminal</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-folder"></i></div><span class="app-name">Files</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-code"></i></div><span class="app-name">CodeForge</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-play-circle"></i></div><span class="app-name">Sync Player</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-store"></i></div><span class="app-name">Traxx Store</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-robot"></i></div><span class="app-name">Traxx AI</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-cog"></i></div><span class="app-name">Settings</span>
+          </div>
+        </div>
+      </div>
+      <div class="launcher-section">
+        <h3>All Apps</h3>
+        <div id="all-apps" class="launcher-grid">
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-globe"></i></div><span class="app-name">Browser</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-terminal"></i></div><span class="app-name">Terminal</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-folder"></i></div><span class="app-name">Files</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-code"></i></div><span class="app-name">CodeForge</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-play-circle"></i></div><span class="app-name">Sync Player</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-store"></i></div><span class="app-name">Traxx Store</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-robot"></i></div><span class="app-name">Traxx AI</span>
+          </div>
+          <div class="launcher-app">
+            <div class="app-icon"><i class="fas fa-cog"></i></div><span class="app-name">Settings</span>
+          </div>
+        </div>
+      </div>
+      <div class="launcher-section">
+        <h3>Quick Actions</h3>
+        <div class="quick-actions"><button class="quick-action"><i
+              class="fas fa-cog"></i><span>Settings</span></button><button class="quick-action"><i
+              class="fas fa-folder"></i><span>Files</span></button><button class="quick-action"><i
+              class="fas fa-terminal"></i><span>Terminal</span></button><button class="quick-action"><i
+              class="fas fa-robot"></i><span>Traxx AI</span></button><button class="quick-action"><i
+              class="fas fa-store"></i><span>App Store</span></button><button class="quick-action"><i
+              class="fas fa-cloud"></i><span>Cloud</span></button></div>
+      </div>
+    </div>
+    <div class="launcher-user">
+      <div class="user-avatar"><i class="fas fa-user"></i></div>
+      <div class="user-info"><span class="user-name">Traxx User</span><span class="user-status">Online</span></div>
+      <button class="power-btn"><i class="fas fa-power-off"></i></button>
+    </div>
+  </div><!-- Traxx Bar -->
+  <div id="traxx-bar" class="traxx-bar">
+    <div class="bar-left"><button id="launcher-btn" class="launcher-button">
+        <div class="traxx-logo"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg></div>
+      </button>
+      <div class="pinned-apps-bar"><button data-app="browser" title="Browser" class="taskbar-app"><i
+            class="fas fa-globe"></i></button><button data-app="terminal" title="Terminal" class="taskbar-app"><i
+            class="fas fa-terminal"></i></button><button data-app="files" title="Files" class="taskbar-app"><i
+            class="fas fa-folder"></i></button><button data-app="code-editor" title="CodeForge" class="taskbar-app"><i
+            class="fas fa-code"></i></button></div>
+    </div>
+    <div class="bar-center">
+      <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="global-search"
+          placeholder="Search Traxx OS..." /></div>
+    </div>
+    <div class="bar-right">
+      <div class="system-tray"><button title="Traxx AI" class="tray-icon"><i class="fas fa-robot"></i></button><button
+          title="Network" class="tray-icon"><i class="fas fa-wifi"></i></button><button title="Volume"
+          class="tray-icon"><i class="fas fa-volume-up"></i></button><button title="Battery" class="tray-icon"><i
+            class="fas fa-battery-full"></i></button>
+        <div class="tray-separator"></div>
+        <div class="datetime"><span id="current-time" class="time">09:10 PM</span><span id="current-date"
+            class="date">Apr
+            23</span></div>
+      </div><button title="Show Desktop" class="show-desktop-btn">
+        <div class="show-desktop-indicator"></div>
+      </button>
+    </div>
+  </div><!-- Context Menu -->
+  <div id="context-menu" class="context-menu hidden">
+    <div class="context-item"><i class="fas fa-folder-plus"></i> New Folder
+    </div>
+    <div class="context-item"><i class="fas fa-file-plus"></i> New File
+    </div>
+    <div class="context-separator"></div>
+    <div class="context-item"><i class="fas fa-paste"></i> Paste
+    </div>
+    <div class="context-separator"></div>
+    <div class="context-item"><i class="fas fa-terminal"></i> Open Terminal Here
+    </div>
+    <div class="context-item"><i class="fas fa-cog"></i> Display Settings
+    </div>
+    <div class="context-separator"></div>
+    <div class="context-item"><i class="fas fa-info-circle"></i> About Traxx OS
+    </div>
+  </div>
+  <div>
+    <div id="ninja-daytona-banner" class="ninja-daytona-banner">
+      <div class="ninja-daytona-banner-preview-notice"><span>This website is a temporary preview.</span></div>
+      <div class="ninja-daytona-banner-connection-status"><span id="ninja-connection-spinner"
+          class="ninja-connection-status-spinner"></span><span id="ninja-connection-dot"
+          class="ninja-connection-status-dot connected"></span><span id="ninja-connection-text"
+          class="ninja-connection-status-text">Connected</span></div><button title="Close"
+        class="ninja-daytona-banner-close">×</button>
+    </div>
+  </div>
+  <div id="ninja-disconnect-overlay">
+    <div id="ninja-disconnect-overlay-text">Connection to Ninja computer lost.</div>
+    <div id="ninja-disconnect-overlay-text-2">Please reconnect to continue.</div><button
+      id="ninja-disconnect-reconnect-button"><span id="ninja-disconnect-spinner"></span><span
+        id="ninja-disconnect-button-text">Reconnect</span></button>
+  </div>
+  <script src="desktop-engine/tde-core/desktop.js"></script>
+  <script>
+    // Initialize launcher apps on load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadLauncherApps();
+        initializeClock();
+        initializeContextMenu();
+        
+        // Close launcher when clicking outside
+        document.addEventListener('click', function(e) {
+            const launcher = document.getElementById('app-launcher');
+            const launcherBtn = document.getElementById('launcher-btn');
+            if (!launcher.contains(e.target) && !launcherBtn.contains(e.target)) {
+                closeAppLauncher();
+            }
+        });
+    });
+    
+    function initializeClock() {
+        const updateTime = () => {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            });
+        };
+        updateTime();
+        setInterval(updateTime, 1000);
+    }
+    
+    function initializeContextMenu() {
+        const desktop = document.getElementById('desktop');
+        const contextMenu = document.getElementById('context-menu');
+        
+        desktop.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            contextMenu.style.left = e.clientX + 'px';
+            contextMenu.style.top = e.clientY + 'px';
+            contextMenu.classList.remove('hidden');
+        });
+        
+        document.addEventListener('click', function() {
+            contextMenu.classList.add('hidden');
+        });
+    }
+    
+    function loadLauncherApps() {
+        const apps = [
+            { id: 'browser', name: 'Browser', icon: 'fa-globe' },
+            { id: 'terminal', name: 'Terminal', icon: 'fa-terminal' },
+            { id: 'files', name: 'Files', icon: 'fa-folder' },
+            { id: 'code-editor', name: 'CodeForge', icon: 'fa-code' },
+            { id: 'sync-player', name: 'Sync Player', icon: 'fa-play-circle' },
+            { id: 'traxx-store', name: 'Traxx Store', icon: 'fa-store' },
+            { id: 'traxx-ai', name: 'Traxx AI', icon: 'fa-robot' },
+            { id: 'settings', name: 'Settings', icon: 'fa-cog' }
+        ];
+        
+        const pinnedGrid = document.getElementById('pinned-apps');
+        const allAppsGrid = document.getElementById('all-apps');
+        
+        pinnedGrid.innerHTML = '';
+        allAppsGrid.innerHTML = '';
+        
+        apps.forEach(app => {
+            const html = `<div class="launcher-app" onclick="launchApp('${app.id}'); closeAppLauncher();">
+                <div class="app-icon"><i class="fas ${app.icon}"></i></div>
+                <span class="app-name">${app.name}</span>
+            </div>`;
+            pinnedGrid.innerHTML += html;
+            allAppsGrid.innerHTML += html;
+        });
+    }
+    
+    function filterApps(query) {
+        const apps = document.querySelectorAll('.launcher-app');
+        apps.forEach(app => {
+            const name = app.querySelector('.app-name').textContent.toLowerCase();
+            app.style.display = name.includes(query.toLowerCase()) ? 'flex' : 'none';
+        });
+    }
+    
+    function toggleAppLauncher() {
+        document.getElementById('app-launcher').classList.toggle('hidden');
+    }
+    
+    function closeAppLauncher() {
+        document.getElementById('app-launcher').classList.add('hidden');
+    }
+    
+    function toggleAIWidget() {
+        document.getElementById('traxx-ai-widget').classList.toggle('minimized');
+    }
+    
+    function sendAIMessage() {
+        const input = document.getElementById('ai-input');
+        const message = input.value.trim();
+        if (!message) return;
+        
+        const container = document.getElementById('ai-chat-messages');
+        container.innerHTML += `<div class="ai-message user"><p>${escapeHtml(message)}</p></div>`;
+        input.value = '';
+        
+        setTimeout(() => {
+            const response = getAIResponse(message);
+            container.innerHTML += `<div class="ai-message system"><p>${response}</p></div>`;
+            container.scrollTop = container.scrollHeight;
+        }, 500);
+    }
+    
+    function getAIResponse(query) {
+        const responses = {
+            'hello': "Hello! 👋 I'm Traxx AI. How can I help you today?",
+            'help': "I can help you with system tasks, answer questions, and assist with coding. Try asking me about Traxx OS!",
+            'who are you': "I'm Traxx AI, the intelligent assistant built into Traxx X Code OS V3. Created by Vincent Ganiza at Traxxion Tech in Zimbabwe 🇿🇼.",
+            'developer': "Traxx X Code OS was developed by Vincent Ganiza from Traxxion Tech, proudly made in Zimbabwe 🇿🇼. Contact: traxxiontech@gmail.com"
+        };
+        
+        const lower = query.toLowerCase();
+        for (const [key, value] of Object.entries(responses)) {
+            if (lower.includes(key)) return value;
+        }
+        
+        return `I understand you're asking about "${query}". For more comprehensive responses, please connect to the internet. How else can I help?`;
+    }
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    function showAboutDialog() {
+        launchApp('about');
+    }
+    
+    function showNotification(title, message) {
+        console.log(`[Notification] ${title}: ${message}`);
+        alert(`${title}: ${message}`);
+    }
+    
+    function performSearch(query) {
+        showNotification('Search', `Searching for "${query}"...`);
+    }
+    
+    function showDesktop() {
+        const windows = document.querySelectorAll('.traxx-window');
+        windows.forEach(w => w.style.display = w.style.display === 'none' ? 'flex' : 'none');
+    }
+    
+    function showPowerMenu() {
+        if (confirm('Restart the system?')) {
+            location.reload();
+        }
+    }
+  </script>
+</body>
+</html>

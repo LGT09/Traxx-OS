@@ -1,0 +1,104 @@
+{
+  "system": {
+    "name": "Traxx X Code OS",
+    "version": "V3",
+    "codename": "Horizon",
+    "build": "2026.1.0",
+    "architecture": "x86_64",
+    "base": "Debian GNU/Linux 12 (Bookworm)"
+  },
+  "developer": {
+    "name": "Vincent Ganiza",
+    "company": "Traxxion Tech",
+    "email": "traxxiontech@gmail.com",
+    "region": "Zimbabwe",
+    "country_code": "ZW",
+    "website": "https://traxxion.tech",
+    "founded": 2024
+  },
+  "branding": {
+    "primary_color": "#1a1a1a",
+    "secondary_color": "#ff6b00",
+    "accent_color": "#ffffff",
+    "success_color": "#00ff88",
+    "warning_color": "#ffaa00",
+    "error_color": "#ff4444",
+    "logo_path": "/usr/share/traxx/assets/logo.svg",
+    "boot_splash_path": "/usr/share/traxx/assets/boot-splash.png"
+  },
+  "desktop_environment": {
+    "name": "Traxx Desktop Engine",
+    "short_name": "TDE",
+    "version": "3.0.0",
+    "compositor": "kwin_wayland",
+    "rendering_engine": "Qt Quick",
+    "animations_enabled": true,
+    "vsync": true
+  },
+  "ai_assistant": {
+    "name": "Traxx AI",
+    "local_model": "llama-3.2-3b-instruct",
+    "offline_mode": true,
+    "online_mode": true,
+    "api_provider": "openai",
+    "voice_ready": true
+  },
+  "app_store": {
+    "name": "Traxx Store",
+    "repository_url": "https://repo.traxxion.tech",
+    "package_format": "deb",
+    "backend": "supabase"
+  },
+  "cloud": {
+    "name": "Traxx Cloud",
+    "backend": "supabase",
+    "api_url": "https://api.traxxion.tech",
+    "storage_quota_gb": 15,
+    "sync_enabled": true
+  },
+  "preinstalled_apps": [
+    {
+      "name": "Traxx Browser",
+      "type": "web-browser",
+      "executable": "/usr/bin/traxx-browser",
+      "base": "chromium"
+    },
+    {
+      "name": "Traxx Terminal",
+      "type": "terminal",
+      "executable": "/usr/bin/traxx-terminal",
+      "base": "konsole"
+    },
+    {
+      "name": "Traxx Files",
+      "type": "file-manager",
+      "executable": "/usr/bin/traxx-files",
+      "base": "dolphin"
+    },
+    {
+      "name": "Sync Player",
+      "type": "media-player",
+      "executable": "/usr/bin/sync-player",
+      "base": "vlc"
+    },
+    {
+      "name": "CodeForge",
+      "type": "code-editor",
+      "executable": "/usr/bin/codeforge",
+      "base": "code-server"
+    }
+  ],
+  "developer_tools": [
+    "nodejs",
+    "npm",
+    "python3",
+    "python3-pip",
+    "git",
+    "docker.io",
+    "build-essential",
+    "curl",
+    "wget",
+    "vim",
+    "neovim"
+  ]
+}

@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <!-- Main Background Gradient -->
+    <linearGradient id="bgMain" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a"/>
+      <stop offset="50%" style="stop-color:#1a1a1a"/>
+      <stop offset="100%" style="stop-color:#0f0f0f"/>
+    </linearGradient>
+    
+    <!-- Orange Glow Gradient -->
+    <radialGradient id="orangeGlow" cx="30%" cy="70%" r="50%">
+      <stop offset="0%" style="stop-color:#ff6b00;stop-opacity:0.15"/>
+      <stop offset="50%" style="stop-color:#ff6b00;stop-opacity:0.05"/>
+      <stop offset="100%" style="stop-color:#ff6b00;stop-opacity:0"/>
+    </radialGradient>
+    
+    <radialGradient id="orangeGlow2" cx="80%" cy="30%" r="40%">
+      <stop offset="0%" style="stop-color:#ff6b00;stop-opacity:0.1"/>
+      <stop offset="50%" style="stop-color:#ff6b00;stop-opacity:0.03"/>
+      <stop offset="100%" style="stop-color:#ff6b00;stop-opacity:0"/>
+    </radialGradient>
+    
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#ff6b00" stroke-width="0.5" opacity="0.05"/>
+    </pattern>
+    
+    <!-- Noise Filter -->
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" result="noise"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="overlay" result="blend"/>
+    </filter>
+  </defs>
+  
+  <!-- Main Background -->
+  <rect width="1920" height="1080" fill="url(#bgMain)"/>
+  
+  <!-- Grid Overlay -->
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  
+  <!-- Orange Glow Effects -->
+  <ellipse cx="576" cy="756" rx="800" ry="500" fill="url(#orangeGlow)"/>
+  <ellipse cx="1536" cy="324" rx="600" ry="400" fill="url(#orangeGlow2)"/>
+  
+  <!-- Decorative Lines -->
+  <g stroke="#ff6b00" stroke-width="1" opacity="0.1">
+    <line x1="0" y1="200" x2="400" y2="0"/>
+    <line x1="0" y1="400" x2="600" y2="0"/>
+    <line x1="0" y1="600" x2="800" y2="0"/>
+    <line x1="1920" y1="480" x2="1320" y2="1080"/>
+    <line x1="1920" y1="680" x2="1520" y2="1080"/>
+    <line x1="1920" y1="880" x2="1720" y2="1080"/>
+  </g>
+  
+  <!-- Geometric Shapes -->
+  <g fill="none" stroke="#ff6b00" opacity="0.15">
+    <!-- Large Circle -->
+    <circle cx="1600" cy="200" r="150" stroke-width="2"/>
+    <circle cx="1600" cy="200" r="140" stroke-width="1"/>
+    
+    <!-- Small Circles -->
+    <circle cx="200" cy="800" r="80" stroke-width="2"/>
+    <circle cx="200" cy="800" r="90" stroke-width="1"/>
+    
+    <!-- Hexagon -->
+    <polygon points="960,100 1060,157 1060,271 960,328 860,271 860,157" stroke-width="2"/>
+  </g>
+  
+  <!-- Floating Particles -->
+  <g fill="#ff6b00">
+    <circle cx="150" cy="150" r="2" opacity="0.4"/>
+    <circle cx="300" cy="300" r="1.5" opacity="0.3"/>
+    <circle cx="450" cy="180" r="2" opacity="0.5"/>
+    <circle cx="600" cy="400" r="1" opacity="0.3"/>
+    <circle cx="800" cy="250" r="2" opacity="0.4"/>
+    <circle cx="1000" cy="150" r="1.5" opacity="0.3"/>
+    <circle cx="1200" cy="350" r="2" opacity="0.4"/>
+    <circle cx="1400" cy="450" r="1" opacity="0.3"/>
+    <circle cx="1600" cy="500" r="2" opacity="0.4"/>
+    <circle cx="1800" cy="300" r="1.5" opacity="0.3"/>
+    <circle cx="1700" cy="700" r="2" opacity="0.4"/>
+    <circle cx="1500" cy="800" r="1" opacity="0.3"/>
+    <circle cx="1300" cy="700" r="2" opacity="0.4"/>
+    <circle cx="1100" cy="850" r="1.5" opacity="0.3"/>
+    <circle cx="900" cy="900" r="2" opacity="0.4"/>
+    <circle cx="700" cy="800" r="1" opacity="0.3"/>
+    <circle cx="500" cy="700" r="2" opacity="0.4"/>
+    <circle cx="300" cy="600" r="1.5" opacity="0.3"/>
+    <circle cx="100" cy="500" r="2" opacity="0.4"/>
+    <circle cx="200" cy="950" r="1" opacity="0.3"/>
+  </g>
+  
+  <!-- Bottom Branding Area -->
+  <g transform="translate(960, 1000)">
+    <!-- Logo Mark -->
+    <g transform="translate(-200, 0)">
+      <path d="M-12 -30 L0 0 L-12 30" fill="none" stroke="#ff6b00" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+      <path d="M12 -30 L0 0 L12 30" fill="none" stroke="#ff6b00" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="20" y="8" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600" fill="#666666" letter-spacing="2">
+      TRAXX X CODE OS V3
+    </text>
+  </g>
+  
+  <!-- Corner Accents -->
+  <g stroke="#ff6b00" stroke-width="2" opacity="0.3">
+    <!-- Top Left -->
+    <path d="M0 60 L0 0 L60 0"/>
+    <!-- Top Right -->
+    <path d="M1860 0 L1920 0 L1920 60"/>
+    <!-- Bottom Left -->
+    <path d="M0 1020 L0 1080 L60 1080"/>
+    <!-- Bottom Right -->
+    <path d="M1860 1080 L1920 1080 L1920 1020"/>
+  </g>
+  
+  <!-- Zimbabwe Flag Accent -->
+  <g transform="translate(50, 50)">
+    <rect x="0" y="0" width="4" height="12" fill="#00ff88" opacity="0.6"/>
+    <rect x="0" y="12" width="4" height="12" fill="#ffcc00" opacity="0.6"/>
+    <rect x="0" y="24" width="4" height="12" fill="#ff4444" opacity="0.6"/>
+    <rect x="0" y="36" width="4" height="12" fill="#000000" opacity="0.6"/>
+  </g>
+</svg>

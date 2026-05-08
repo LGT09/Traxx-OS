@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <!-- Sky gradient - dark with orange glow -->
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a"/>
+      <stop offset="40%" style="stop-color:#1a1a1a"/>
+      <stop offset="70%" style="stop-color:#2a1810"/>
+      <stop offset="100%" style="stop-color:#0d0d0d"/>
+    </linearGradient>
+    
+    <!-- Sunset glow -->
+    <radialGradient id="sunsetGlow" cx="50%" cy="70%" r="50%">
+      <stop offset="0%" style="stop-color:#ff6b00;stop-opacity:0.4"/>
+      <stop offset="30%" style="stop-color:#cc5500;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0"/>
+    </radialGradient>
+    
+    <!-- Sun gradient -->
+    <radialGradient id="sunGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="20%" style="stop-color:#ffcc00"/>
+      <stop offset="60%" style="stop-color:#ff6b00"/>
+      <stop offset="100%" style="stop-color:#cc5500;stop-opacity:0"/>
+    </radialGradient>
+    
+    <!-- Mountain gradients -->
+    <linearGradient id="mountain1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="100%" style="stop-color:#0a0a0a"/>
+    </linearGradient>
+    
+    <linearGradient id="mountain2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#252525"/>
+      <stop offset="100%" style="stop-color:#141414"/>
+    </linearGradient>
+    
+    <linearGradient id="mountain3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a2a2a"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
+    </linearGradient>
+    
+    <!-- Water reflection -->
+    <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b00;stop-opacity:0.1"/>
+      <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0.8"/>
+    </linearGradient>
+    
+    <!-- Filter for glow -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="20" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="softBlur">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+  </defs>
+  
+  <!-- Sky background -->
+  <rect width="1920" height="1080" fill="url(#skyGradient)"/>
+  
+  <!-- Sunset glow -->
+  <rect width="1920" height="1080" fill="url(#sunsetGlow)"/>
+  
+  <!-- Stars -->
+  <g fill="#ffffff">
+    <circle cx="100" cy="80" r="1" opacity="0.6"/>
+    <circle cx="250" cy="150" r="0.8" opacity="0.4"/>
+    <circle cx="400" cy="60" r="1.2" opacity="0.5"/>
+    <circle cx="550" cy="200" r="0.8" opacity="0.3"/>
+    <circle cx="700" cy="100" r="1" opacity="0.6"/>
+    <circle cx="850" cy="180" r="0.6" opacity="0.4"/>
+    <circle cx="1100" cy="80" r="1.1" opacity="0.5"/>
+    <circle cx="1250" cy="150" r="0.8" opacity="0.4"/>
+    <circle cx="1400" cy="60" r="1" opacity="0.6"/>
+    <circle cx="1550" cy="200" r="0.9" opacity="0.5"/>
+    <circle cx="1700" cy="100" r="1.2" opacity="0.4"/>
+    <circle cx="1850" cy="180" r="0.7" opacity="0.3"/>
+    <circle cx="180" cy="300" r="0.8" opacity="0.3"/>
+    <circle cx="380" cy="280" r="1" opacity="0.4"/>
+    <circle cx="1600" cy="300" r="0.9" opacity="0.3"/>
+    <circle cx="1750" cy="280" r="1.1" opacity="0.4"/>
+  </g>
+  
+  <!-- Sun -->
+  <circle cx="960" cy="680" r="80" fill="url(#sunGradient)" filter="url(#glow)"/>
+  <circle cx="960" cy="680" r="50" fill="#ffcc00" opacity="0.8"/>
+  
+  <!-- Sun rays -->
+  <g stroke="#ff6b00" stroke-width="1" opacity="0.2">
+    <line x1="960" y1="680" x2="960" y2="400"/>
+    <line x1="960" y1="680" x2="1100" y2="450"/>
+    <line x1="960" y1="680" x2="820" y2="450"/>
+    <line x1="960" y1="680" x2="1200" y2="550"/>
+    <line x1="960" y1="680" x2="720" y2="550"/>
+  </g>
+  
+  <!-- Far mountains -->
+  <path d="M0 700 L200 550 L400 650 L600 500 L800 600 L960 480 L1120 580 L1320 450 L1520 580 L1720 520 L1920 600 L1920 1080 L0 1080 Z" 
+        fill="url(#mountain3)" opacity="0.5"/>
+  
+  <!-- Middle mountains -->
+  <path d="M0 750 L150 620 L350 700 L500 580 L700 680 L900 550 L1050 650 L1250 520 L1450 620 L1650 560 L1850 650 L1920 700 L1920 1080 L0 1080 Z" 
+        fill="url(#mountain2)" opacity="0.7"/>
+  
+  <!-- Near mountains -->
+  <path d="M0 800 L100 700 L250 780 L400 680 L550 750 L750 650 L950 750 L1100 680 L1300 760 L1500 680 L1700 750 L1920 680 L1920 1080 L0 1080 Z" 
+        fill="url(#mountain1)"/>
+  
+  <!-- Water/Lake -->
+  <rect x="0" y="850" width="1920" height="230" fill="url(#waterGradient)"/>
+  
+  <!-- Water reflection of sun -->
+  <ellipse cx="960" cy="900" rx="60" ry="20" fill="#ff6b00" opacity="0.2" filter="url(#softBlur)"/>
+  <ellipse cx="960" cy="950" rx="40" ry="10" fill="#ff8533" opacity="0.15" filter="url(#softBlur)"/>
+  <ellipse cx="960" cy="1000" rx="30" ry="8" fill="#ff6b00" opacity="0.1" filter="url(#softBlur)"/>
+  
+  <!-- Water ripples -->
+  <g stroke="#ff6b00" stroke-width="0.5" opacity="0.1">
+    <path d="M0 870 Q 240 865, 480 870 T 960 870 T 1440 870 T 1920 870" fill="none"/>
+    <path d="M0 900 Q 240 895, 480 900 T 960 900 T 1440 900 T 1920 900" fill="none"/>
+    <path d="M0 930 Q 240 925, 480 930 T 960 930 T 1440 930 T 1920 930" fill="none"/>
+  </g>
+  
+  <!-- Foreground silhouette -->
+  <path d="M0 950 Q 200 930, 400 950 Q 600 970, 800 950 Q 1000 930, 1200 950 Q 1400 970, 1600 950 Q 1800 930, 1920 950 L1920 1080 L0 1080 Z" 
+        fill="#0a0a0a"/>
+  
+  <!-- Birds silhouette -->
+  <g fill="#0a0a0a" opacity="0.6">
+    <path d="M300 400 Q 310 390, 320 400 Q 330 390, 340 400"/>
+    <path d="M350 420 Q 360 410, 370 420 Q 380 410, 390 420"/>
+    <path d="M1500 380 Q 1510 370, 1520 380 Q 1530 370, 1540 380"/>
+    <path d="M1550 400 Q 1560 390, 1570 400 Q 1580 390, 1590 400"/>
+    <path d="M1600 380 Q 1610 370, 1620 380 Q 1630 370, 1640 380"/>
+  </g>
+  
+  <!-- Trees silhouette on sides -->
+  <g fill="#0a0a0a">
+    <!-- Left trees -->
+    <path d="M0 1080 L0 850 L30 850 L50 800 L70 850 L100 850 L100 1080 Z"/>
+    <path d="M80 1080 L80 820 L110 820 L130 770 L150 820 L180 820 L180 1080 Z"/>
+    <path d="M160 1080 L160 860 L190 860 L210 810 L230 860 L260 860 L260 1080 Z"/>
+    
+    <!-- Right trees -->
+    <path d="M1660 1080 L1660 860 L1690 860 L1710 810 L1730 860 L1760 860 L1760 1080 Z"/>
+    <path d="M1740 1080 L1740 820 L1770 820 L1790 770 L1810 820 L1840 820 L1840 1080 Z"/>
+    <path d="M1820 1080 L1820 850 L1850 850 L1870 800 L1890 850 L1920 850 L1920 1080 Z"/>
+  </g>
+  
+  <!-- Brand text -->
+  <text x="50" y="1040" font-family="Arial, sans-serif" font-size="14" fill="#ffffff" opacity="0.2">Traxx X Code OS V3</text>
+  <text x="50" y="1060" font-family="Arial, sans-serif" font-size="10" fill="#ff6b00" opacity="0.3">Proudly Made in Zimbabwe 🇿🇼</text>
+</svg>

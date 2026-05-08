@@ -1,0 +1,16 @@
+total 60
+drwxr-xr-x 15 root root 4096 Apr 23 20:14 .
+drwxr-xr-x 11 root root 4096 Apr 23 19:20 ..
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 browser
+drwxr-xr-x  2 root root 4096 Apr 23 19:19 calculator
+drwxr-xr-x  2 root root 4096 Apr 23 19:29 calendar
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 code-editor
+drwxr-xr-x  2 root root 4096 Apr 23 20:05 control-center
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 file-manager
+drwxr-xr-x  2 root root 4096 Apr 23 19:24 notes
+drwxr-xr-x  2 root root 4096 Apr 23 19:41 photos
+drwxr-xr-x  2 root root 4096 Apr 23 19:35 settings
+drwxr-xr-x  2 root root 4096 Apr 23 20:12 sync-player
+drwxr-xr-x  2 root root 4096 Apr 23 19:45 system-monitor
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 terminal
+drwxr-xr-x  2 root root 4096 Apr 23 20:14 weather-widget

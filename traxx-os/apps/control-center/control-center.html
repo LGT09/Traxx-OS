@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Center - Traxx OS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: rgba(10, 10, 10, 0.85);
+            --bg-secondary: rgba(20, 20, 20, 0.9);
+            --bg-tertiary: rgba(30, 30, 30, 0.8);
+            --bg-hover: rgba(40, 40, 40, 0.8);
+            --accent: #ff6b00;
+            --accent-hover: #ff8533;
+            --accent-dim: #cc5500;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-dim: #666666;
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #00c853;
+            --warning: #ffc107;
+            --error: #ff5252;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: transparent;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: flex-end;
+            padding: 60px 20px 20px 20px;
+        }
+
+        .control-center {
+            width: 360px;
+            background: var(--bg-primary);
+            backdrop-filter: blur(30px);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-tertiary);
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .content {
+            padding: 15px;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+
+        /* Toggle Grid */
+        .toggle-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .toggle-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .toggle-card:hover {
+            background: var(--bg-hover);
+        }
+
+        .toggle-card.active {
+            border-color: var(--accent);
+            background: rgba(255, 107, 0, 0.15);
+        }
+
+        .toggle-card.active .toggle-icon {
+            color: var(--accent);
+        }
+
+        .toggle-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .toggle-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .toggle-card.active .toggle-icon {
+            background: var(--accent);
+            color: white;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .toggle-status {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .toggle-card.active .toggle-status {
+            color: var(--accent);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-link {
+            font-size: 12px;
+            color: var(--accent);
+            cursor: pointer;
+        }
+
+        /* Slider Card */
+        .slider-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .slider-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .slider-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .slider-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .slider-label {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .slider-value {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .slider-track {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .slider-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+            border-radius: 3px;
+            width: 70%;
+        }
+
+        .slider-thumb {
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            cursor: grab;
+        }
+
+        /* Music Player */
+        .music-player {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .music-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .music-art {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .music-details {
+            flex: 1;
+        }
+
+        .music-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .music-artist {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .music-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .music-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-tertiary);
+            border: none;
+            border-radius: 50%;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .music-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .music-btn.play {
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            color: white;
+        }
+
+        .music-progress {
+            margin-top: 12px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 35%;
+        }
+
+        .progress-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 5px;
+        }
+
+        /* Network Card */
+        .network-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .network-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .network-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .network-item:first-child {
+            padding-top: 0;
+        }
+
+        .network-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .network-icon.connected {
+            color: var(--success);
+        }
+
+        .network-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .network-info {
+            flex: 1;
+        }
+
+        .network-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .network-status {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .network-status.connected {
+            color: var(--success);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .quick-action {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action:hover {
+            background: var(--bg-hover);
+        }
+
+        .quick-action-icon {
+            width: 36px;
+            height: 36px;
+            margin: 0 auto 8px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .quick-action-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .quick-action-label {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        /* User Card */
+        .user-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .user-menu-btn {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-tertiary);
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Battery Card */
+        .battery-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .battery-visual {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .battery-icon-large {
+            width: 50px;
+            height: 28px;
+            border: 2px solid var(--text-dim);
+            border-radius: 4px;
+            position: relative;
+            padding: 3px;
+        }
+
+        .battery-icon-large::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 10px;
+            background: var(--text-dim);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .battery-level {
+            height: 100%;
+            background: var(--success);
+            border-radius: 2px;
+            width: 85%;
+        }
+
+        .battery-details {
+            flex: 1;
+        }
+
+        .battery-percent {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .battery-time {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-hover);
+            border-radius: 3px;
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="control-center">
+        <div class="header">
+            <h1>Control Center</h1>
+            <div class="header-actions">
+                <button class="header-btn" title="Settings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- User Card -->
+            <div class="user-card">
+                <div class="user-avatar">VG</div>
+                <div class="user-info">
+                    <div class="user-name">Vincent Ganiza</div>
+                    <div class="user-email">vincent@traxxiontech.com</div>
+                </div>
+                <button class="user-menu-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"/>
+                        <circle cx="12" cy="5" r="1"/>
+                        <circle cx="12" cy="19" r="1"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Network Section -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">Network</span>
+                    <span class="section-link">Network Settings</span>
+                </div>
+                <div class="network-card">
+                    <div class="network-item">
+                        <div class="network-icon connected">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                                <circle cx="12" cy="20" r="1" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="network-info">
+                            <div class="network-name">TraxxNet_5G</div>
+                            <div class="network-status connected">Connected</div>
+                        </div>
+                    </div>
+                    <div class="network-item">
+                        <div class="network-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/>
+                            </svg>
+                        </div>
+                        <div class="network-info">
+                            <div class="network-name">Bluetooth</div>
+                            <div class="network-status">Off</div>
+                        </div>
+                    </div>
+                    <div class="network-item">
+                        <div class="network-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                            </svg>
+                        </div>
+                        <div class="network-info">
+                            <div class="network-name">Airplane Mode</div>
+                            <div class="network-status">Off</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toggle Grid -->
+            <div class="toggle-grid">
+                <div class="toggle-card active" onclick="toggleCard(this)">
+                    <div class="toggle-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                            <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                            <circle cx="12" cy="20" r="1" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="toggle-label">Wi-Fi</div>
+                    <div class="toggle-status">TraxxNet_5G</div>
+                </div>
+                <div class="toggle-card" onclick="toggleCard(this)">
+                    <div class="toggle-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/>
+                        </svg>
+                    </div>
+                    <div class="toggle-label">Bluetooth</div>
+                    <div class="toggle-status">Off</div>
+                </div>
+                <div class="toggle-card" onclick="toggleCard(this)">
+                    <div class="toggle-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                        </svg>
+                    </div>
+                    <div class="toggle-label">Airplane</div>
+                    <div class="toggle-status">Off</div>
+                </div>
+                <div class="toggle-card active" onclick="toggleCard(this)">
+                    <div class="toggle-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </div>
+                    <div class="toggle-label">Night Mode</div>
+                    <div class="toggle-status">On</div>
+                </div>
+                <div class="toggle-card" onclick="toggleCard(this)">
+                    <div class="toggle-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="8" y1="12" x2="16" y2="12"/>
+                        </svg>
+                    </div>
+                    <div class="toggle-label">DND</div>
+                    <div class="toggle-status">Off</div>
+                </div>
+                <div class="toggle-card" onclick="toggleCard(this)">
+                    <div class="toggle-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <div class="toggle-label">Focus</div>
+                    <div class="toggle-status">Off</div>
+                </div>
+            </div>
+
+            <!-- Brightness Slider -->
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                        </svg>
+                    </div>
+                    <span class="slider-label">Brightness</span>
+                    <span class="slider-value">70%</span>
+                </div>
+                <div class="slider-track">
+                    <div class="slider-fill"></div>
+                    <div class="slider-thumb"></div>
+                </div>
+            </div>
+
+            <!-- Volume Slider -->
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                        </svg>
+                    </div>
+                    <span class="slider-label">Volume</span>
+                    <span class="slider-value">65%</span>
+                </div>
+                <div class="slider-track">
+                    <div class="slider-fill" style="width: 65%"></div>
+                    <div class="slider-thumb" style="left: 65%"></div>
+                </div>
+            </div>
+
+            <!-- Music Player -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">Now Playing</span>
+                </div>
+                <div class="music-player">
+                    <div class="music-info">
+                        <div class="music-art">🎵</div>
+                        <div class="music-details">
+                            <div class="music-title">African Sunrise</div>
+                            <div class="music-artist">Traxx Beats</div>
+                        </div>
+                    </div>
+                    <div class="music-controls">
+                        <button class="music-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="19 20 9 12 19 4 19 20"/>
+                                <line x1="5" y1="19" x2="5" y2="5"/>
+                            </svg>
+                        </button>
+                        <button class="music-btn play">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </button>
+                        <button class="music-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 4 15 12 5 20 5 4"/>
+                                <line x1="19" y1="5" x2="19" y2="19"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="music-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div class="progress-time">
+                            <span>1:24</span>
+                            <span>4:02</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battery -->
+            <div class="battery-card">
+                <div class="battery-visual">
+                    <div class="battery-icon-large">
+                        <div class="battery-level"></div>
+                    </div>
+                    <div class="battery-details">
+                        <div class="battery-percent">85%</div>
+                        <div class="battery-time">4h 32m remaining</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="section" style="margin-top: 15px;">
+                <div class="section-header">
+                    <span class="section-title">Quick Actions</span>
+                </div>
+                <div class="quick-actions">
+                    <div class="quick-action">
+                        <div class="quick-action-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </div>
+                        <div class="quick-action-label">Lock</div>
+                    </div>
+                    <div class="quick-action">
+                        <div class="quick-action-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                            </svg>
+                        </div>
+                        <div class="quick-action-label">Power</div>
+                    </div>
+                    <div class="quick-action">
+                        <div class="quick-action-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                            </svg>
+                        </div>
+                        <div class="quick-action-label">Sleep</div>
+                    </div>
+                    <div class="quick-action">
+                        <div class="quick-action-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                            </svg>
+                        </div>
+                        <div class="quick-action-label">Restart</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle card
+        function toggleCard(card) {
+            card.classList.toggle('active');
+            const status = card.querySelector('.toggle-status');
+            if (status) {
+                if (card.classList.contains('active')) {
+                    status.textContent = 'On';
+                } else {
+                    status.textContent = 'Off';
+                }
+            }
+        }
+
+        // Slider interaction
+        document.querySelectorAll('.slider-track').forEach(track => {
+            const card = track.closest('.slider-card');
+            const fill = track.querySelector('.slider-fill');
+            const thumb = track.querySelector('.slider-thumb');
+            const value = card.querySelector('.slider-value');
+
+            let isDragging = false;
+
+            const updateSlider = (e) => {
+                const rect = track.getBoundingClientRect();
+                let percent = ((e.clientX - rect.left) / rect.width) * 100;
+                percent = Math.max(0, Math.min(100, percent));
+                
+                fill.style.width = `${percent}%`;
+                thumb.style.left = `${percent}%`;
+                value.textContent = `${Math.round(percent)}%`;
+            };
+
+            track.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                updateSlider(e);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) updateSlider(e);
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        });
+    </script>
+</body>
+</html>

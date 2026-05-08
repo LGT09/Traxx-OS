@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traxx Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-tertiary: #1a1a1a;
+            --bg-hover: #252525;
+            --accent: #ff6b00;
+            --accent-hover: #ff8533;
+            --accent-dim: #cc5500;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-dim: #666666;
+            --border: #2a2a2a;
+            --success: #00c853;
+            --warning: #ffc107;
+            --error: #ff5252;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header h1 svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .search-box {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+        }
+
+        .sidebar-actions {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .new-note-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .new-note-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        .folders-section {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .folders-title {
+            font-size: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .folder-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            transition: background 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .folder-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .folder-item.active {
+            background: var(--bg-hover);
+            color: var(--accent);
+        }
+
+        .folder-item svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .folder-count {
+            margin-left: auto;
+            background: var(--bg-tertiary);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .notes-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .note-item {
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid transparent;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .note-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .note-item.active {
+            border-color: var(--accent);
+            background: var(--bg-hover);
+        }
+
+        .note-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .note-item-preview {
+            font-size: 12px;
+            color: var(--text-dim);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 8px;
+        }
+
+        .note-item-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .note-item-tag {
+            background: rgba(255, 107, 0, 0.2);
+            color: var(--accent);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-header {
+            padding: 15px 25px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .note-title-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .note-title-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 5px;
+        }
+
+        .toolbar-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .toolbar-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            background: var(--border);
+            margin: 0 5px;
+        }
+
+        .editor-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .editor-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .note-editor {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.8;
+            outline: none;
+            resize: none;
+        }
+
+        .note-editor::placeholder {
+            color: var(--text-dim);
+        }
+
+        /* Markdown Preview */
+        .markdown-preview {
+            flex: 1;
+            padding: 25px;
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            display: none;
+        }
+
+        .markdown-preview.show {
+            display: block;
+        }
+
+        .markdown-preview h1, .markdown-preview h2, .markdown-preview h3 {
+            margin: 20px 0 10px;
+            color: var(--accent);
+        }
+
+        .markdown-preview p {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .markdown-preview code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+        }
+
+        .markdown-preview pre {
+            background: var(--bg-tertiary);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            padding: 8px 25px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .status-left, .status-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .save-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .save-status.saved {
+            color: var(--success);
+        }
+
+        /* Tags Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 25px;
+            width: 400px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .tag-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tag-input-container input {
+            flex: 1;
+            padding: 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .tag-input-container button {
+            padding: 10px 20px;
+            background: var(--accent);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-chip {
+            background: rgba(255, 107, 0, 0.2);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag-chip button {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-hover);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-dim);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-dim);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h2 {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Traxx Notes
+            </h1>
+        </div>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search notes..." id="searchInput">
+        </div>
+
+        <div class="sidebar-actions">
+            <button class="new-note-btn" onclick="createNewNote()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                New Note
+            </button>
+        </div>
+
+        <div class="folders-section">
+            <div class="folders-title">Folders</div>
+            <div class="folder-item active" data-folder="all">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+                All Notes
+                <span class="folder-count" id="allCount">0</span>
+            </div>
+            <div class="folder-item" data-folder="favorites">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                Favorites
+                <span class="folder-count" id="favCount">0</span>
+            </div>
+            <div class="folder-item" data-folder="recent">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Recent
+                <span class="folder-count" id="recentCount">0</span>
+            </div>
+            <div class="folder-item" data-folder="trash">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+                Trash
+                <span class="folder-count" id="trashCount">0</span>
+            </div>
+        </div>
+
+        <div class="notes-list" id="notesList">
+            <!-- Notes will be rendered here -->
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="editor-header">
+            <input type="text" class="note-title-input" id="noteTitle" placeholder="Untitled Note">
+            <div class="editor-toolbar">
+                <button class="toolbar-btn" onclick="formatText('bold')" title="Bold">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                        <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('italic')" title="Italic">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="4" x2="10" y2="4"/>
+                        <line x1="14" y1="20" x2="15" y2="20"/>
+                        <line x1="15" y1="4" x2="9" y2="20"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('underline')" title="Underline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"/>
+                        <line x1="4" y1="21" x2="20" y2="21"/>
+                    </svg>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" onclick="formatText('list')" title="List">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/>
+                        <line x1="8" y1="12" x2="21" y2="12"/>
+                        <line x1="8" y1="18" x2="21" y2="18"/>
+                        <line x1="3" y1="6" x2="3.01" y2="6"/>
+                        <line x1="3" y1="12" x2="3.01" y2="12"/>
+                        <line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('code')" title="Code">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16 18 22 12 16 6"/>
+                        <polyline points="8 6 2 12 8 18"/>
+                    </svg>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" onclick="toggleFavorite()" id="favoriteBtn" title="Favorite">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" onclick="showTagsModal()" title="Tags">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                        <line x1="7" y1="7" x2="7.01" y2="7"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" onclick="togglePreview()" id="previewBtn" title="Preview">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="editor-body">
+            <div class="editor-content">
+                <textarea class="note-editor" id="noteEditor" placeholder="Start writing your note..."></textarea>
+            </div>
+            <div class="markdown-preview" id="markdownPreview"></div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="save-status saved" id="saveStatus">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Saved
+                </span>
+                <span id="wordCount">0 words</span>
+                <span id="charCount">0 characters</span>
+            </div>
+            <div class="status-right">
+                <span id="lastModified">Last modified: -</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tags Modal -->
+    <div class="modal-overlay" id="tagsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Manage Tags</h2>
+                <button class="modal-close" onclick="closeTagsModal()">&times;</button>
+            </div>
+            <div class="tag-input-container">
+                <input type="text" id="newTagInput" placeholder="Add a tag...">
+                <button onclick="addTag()">Add</button>
+            </div>
+            <div class="tags-list" id="tagsList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Notes data store
+        let notes = [];
+        let currentNote = null;
+        let currentFolder = 'all';
+        let previewMode = false;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNotes();
+            renderNotesList();
+            setupEventListeners();
+        });
+
+        // Load notes from localStorage
+        function loadNotes() {
+            const saved = localStorage.getItem('traxx-notes');
+            if (saved) {
+                notes = JSON.parse(saved);
+            } else {
+                // Create sample notes
+                notes = [
+                    {
+                        id: Date.now(),
+                        title: 'Welcome to Traxx Notes',
+                        content: '# Welcome to Traxx Notes!\n\nThis is your new note-taking app. Features include:\n\n- **Bold**, *italic*, and underline text\n- Code blocks with syntax highlighting\n- Markdown preview mode\n- Tags and favorites\n- Auto-save functionality\n\n## Getting Started\n\n1. Create a new note with the button above\n2. Use the toolbar to format your text\n3. Toggle preview mode to see markdown rendered\n\n```javascript\nconsole.log("Hello, Traxx Notes!");\n```',
+                        favorite: true,
+                        tags: ['welcome', 'tutorial'],
+                        created: Date.now(),
+                        modified: Date.now(),
+                        deleted: false
+                    }
+                ];
+                saveNotes();
+            }
+        }
+
+        // Save notes to localStorage
+        function saveNotes() {
+            localStorage.setItem('traxx-notes', JSON.stringify(notes));
+            updateCounts();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Title input
+            document.getElementById('noteTitle').addEventListener('input', (e) => {
+                if (currentNote) {
+                    currentNote.title = e.target.value;
+                    currentNote.modified = Date.now();
+                    saveNotes();
+                    renderNotesList();
+                    updateSaveStatus();
+                }
+            });
+
+            // Editor input
+            document.getElementById('noteEditor').addEventListener('input', (e) => {
+                if (currentNote) {
+                    currentNote.content = e.target.value;
+                    currentNote.modified = Date.now();
+                    saveNotes();
+                    updateWordCount();
+                    updatePreview();
+                    updateSaveStatus();
+                }
+            });
+
+            // Search
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                renderNotesList(e.target.value);
+            });
+
+            // Folder selection
+            document.querySelectorAll('.folder-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.folder-item').forEach(f => f.classList.remove('active'));
+                    item.classList.add('active');
+                    currentFolder = item.dataset.folder;
+                    renderNotesList();
+                });
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case 'n':
+                            e.preventDefault();
+                            createNewNote();
+                            break;
+                        case 's':
+                            e.preventDefault();
+                            saveNotes();
+                            updateSaveStatus();
+                            break;
+                        case 'p':
+                            e.preventDefault();
+                            togglePreview();
+                            break;
+                    }
+                }
+            });
+        }
+
+        // Render notes list
+        function renderNotesList(searchQuery = '') {
+            const container = document.getElementById('notesList');
+            let filteredNotes = notes.filter(n => !n.deleted);
+
+            // Filter by folder
+            switch(currentFolder) {
+                case 'favorites':
+                    filteredNotes = filteredNotes.filter(n => n.favorite);
+                    break;
+                case 'recent':
+                    filteredNotes = filteredNotes.sort((a, b) => b.modified - a.modified).slice(0, 10);
+                    break;
+                case 'trash':
+                    filteredNotes = notes.filter(n => n.deleted);
+                    break;
+            }
+
+            // Filter by search
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                filteredNotes = filteredNotes.filter(n => 
+                    n.title.toLowerCase().includes(query) ||
+                    n.content.toLowerCase().includes(query) ||
+                    n.tags.some(t => t.toLowerCase().includes(query))
+                );
+            }
+
+            container.innerHTML = filteredNotes.map(note => `
+                <div class="note-item ${currentNote && currentNote.id === note.id ? 'active' : ''}" 
+                     onclick="selectNote(${note.id})">
+                    <div class="note-item-title">
+                        ${note.favorite ? '⭐ ' : ''}${note.title || 'Untitled'}
+                    </div>
+                    <div class="note-item-preview">${note.content.substring(0, 50)}...</div>
+                    <div class="note-item-meta">
+                        <span>${formatDate(note.modified)}</span>
+                        ${note.tags.length > 0 ? `<span class="note-item-tag">${note.tags[0]}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Select a note
+        function selectNote(id) {
+            currentNote = notes.find(n => n.id === id);
+            if (currentNote) {
+                document.getElementById('noteTitle').value = currentNote.title;
+                document.getElementById('noteEditor').value = currentNote.content;
+                updateWordCount();
+                updatePreview();
+                updateFavoriteBtn();
+                document.getElementById('lastModified').textContent = 
+                    `Last modified: ${formatDate(currentNote.modified)}`;
+                renderNotesList();
+            }
+        }
+
+        // Create new note
+        function createNewNote() {
+            const newNote = {
+                id: Date.now(),
+                title: 'Untitled Note',
+                content: '',
+                favorite: false,
+                tags: [],
+                created: Date.now(),
+                modified: Date.now(),
+                deleted: false
+            };
+            notes.unshift(newNote);
+            saveNotes();
+            selectNote(newNote.id);
+            renderNotesList();
+            document.getElementById('noteTitle').focus();
+            document.getElementById('noteTitle').select();
+        }
+
+        // Format text
+        function formatText(type) {
+            const editor = document.getElementById('noteEditor');
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value.substring(start, end);
+
+            let formatted;
+            switch(type) {
+                case 'bold':
+                    formatted = `**${text}**`;
+                    break;
+                case 'italic':
+                    formatted = `*${text}*`;
+                    break;
+                case 'underline':
+                    formatted = `__${text}__`;
+                    break;
+                case 'code':
+                    formatted = text.includes('\n') ? `\`\`\`\n${text}\n\`\`\`` : `\`${text}\``;
+                    break;
+                case 'list':
+                    formatted = text.split('\n').map(l => `- ${l}`).join('\n');
+                    break;
+                default:
+                    formatted = text;
+            }
+
+            editor.value = editor.value.substring(0, start) + formatted + editor.value.substring(end);
+            if (currentNote) {
+                currentNote.content = editor.value;
+                saveNotes();
+            }
+        }
+
+        // Toggle favorite
+        function toggleFavorite() {
+            if (currentNote) {
+                currentNote.favorite = !currentNote.favorite;
+                saveNotes();
+                updateFavoriteBtn();
+                renderNotesList();
+            }
+        }
+
+        // Update favorite button
+        function updateFavoriteBtn() {
+            const btn = document.getElementById('favoriteBtn');
+            if (currentNote && currentNote.favorite) {
+                btn.classList.add('active');
+                btn.querySelector('svg').setAttribute('fill', 'currentColor');
+            } else {
+                btn.classList.remove('active');
+                btn.querySelector('svg').setAttribute('fill', 'none');
+            }
+        }
+
+        // Toggle preview mode
+        function togglePreview() {
+            previewMode = !previewMode;
+            document.getElementById('previewBtn').classList.toggle('active', previewMode);
+            document.getElementById('markdownPreview').classList.toggle('show', previewMode);
+            updatePreview();
+        }
+
+        // Update markdown preview
+        function updatePreview() {
+            if (previewMode && currentNote) {
+                const content = currentNote.content;
+                // Simple markdown rendering
+                let html = content
+                    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                    .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+                    .replace(/\*(.*)\*/gim, '<em>$1</em>')
+                    .replace(/`([^`]+)`/gim, '<code>$1</code>')
+                    .replace(/^\- (.*$)/gim, '<li>$1</li>')
+                    .replace(/\n/gim, '<br>');
+                document.getElementById('markdownPreview').innerHTML = html;
+            }
+        }
+
+        // Show tags modal
+        function showTagsModal() {
+            if (currentNote) {
+                document.getElementById('tagsModal').classList.add('show');
+                renderTagsList();
+            }
+        }
+
+        // Close tags modal
+        function closeTagsModal() {
+            document.getElementById('tagsModal').classList.remove('show');
+        }
+
+        // Render tags list
+        function renderTagsList() {
+            if (currentNote) {
+                document.getElementById('tagsList').innerHTML = currentNote.tags.map(tag => `
+                    <span class="tag-chip">
+                        ${tag}
+                        <button onclick="removeTag('${tag}')">&times;</button>
+                    </span>
+                `).join('');
+            }
+        }
+
+        // Add tag
+        function addTag() {
+            const input = document.getElementById('newTagInput');
+            const tag = input.value.trim();
+            if (tag && currentNote && !currentNote.tags.includes(tag)) {
+                currentNote.tags.push(tag);
+                saveNotes();
+                renderTagsList();
+                input.value = '';
+            }
+        }
+
+        // Remove tag
+        function removeTag(tag) {
+            if (currentNote) {
+                currentNote.tags = currentNote.tags.filter(t => t !== tag);
+                saveNotes();
+                renderTagsList();
+            }
+        }
+
+        // Update word count
+        function updateWordCount() {
+            const content = document.getElementById('noteEditor').value;
+            const words = content.trim() ? content.trim().split(/\s+/).length : 0;
+            const chars = content.length;
+            document.getElementById('wordCount').textContent = `${words} words`;
+            document.getElementById('charCount').textContent = `${chars} characters`;
+        }
+
+        // Update save status
+        function updateSaveStatus() {
+            const status = document.getElementById('saveStatus');
+            status.classList.remove('saved');
+            status.innerHTML = `
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Saving...
+            `;
+            setTimeout(() => {
+                status.classList.add('saved');
+                status.innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Saved
+                `;
+            }, 500);
+        }
+
+        // Update counts
+        function updateCounts() {
+            document.getElementById('allCount').textContent = notes.filter(n => !n.deleted).length;
+            document.getElementById('favCount').textContent = notes.filter(n => n.favorite && !n.deleted).length;
+            document.getElementById('recentCount').textContent = notes.filter(n => !n.deleted).length;
+            document.getElementById('trashCount').textContent = notes.filter(n => n.deleted).length;
+        }
+
+        // Format date
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+            
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+    </script>
+</body>
+</html>

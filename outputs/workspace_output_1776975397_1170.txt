@@ -1,0 +1,19 @@
+traxx-os/apps/browser/:
+total 8
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 .
+drwxr-xr-x 15 root root 4096 Apr 23 20:14 ..
+
+traxx-os/apps/code-editor/:
+total 8
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 .
+drwxr-xr-x 15 root root 4096 Apr 23 20:14 ..
+
+traxx-os/apps/file-manager/:
+total 8
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 .
+drwxr-xr-x 15 root root 4096 Apr 23 20:14 ..
+
+traxx-os/apps/terminal/:
+total 8
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 .
+drwxr-xr-x 15 root root 4096 Apr 23 20:14 ..

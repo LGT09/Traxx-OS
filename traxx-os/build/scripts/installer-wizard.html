@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traxx X Code OS - Installation Wizard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+
+        .installer-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(0, 0, 0, 0.5);
+            border-right: 1px solid rgba(255, 107, 0, 0.2);
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #ff6b00 0%, #e55d00 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: #ff6b00;
+        }
+
+        .steps {
+            flex: 1;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .step.active {
+            background: rgba(255, 107, 0, 0.15);
+        }
+
+        .step.completed {
+            color: #00ff88;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .step.active .step-number {
+            background: #ff6b00;
+        }
+
+        .step.completed .step-number {
+            background: #00ff88;
+        }
+
+        .step-label {
+            font-size: 14px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 48px;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 48px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header h1 span {
+            color: #ff6b00;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 16px;
+        }
+
+        /* Step Content */
+        .step-content {
+            display: none;
+            flex: 1;
+        }
+
+        .step-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ccc;
+        }
+
+        .form-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: #ff6b00;
+        }
+
+        .form-select {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Partition Table */
+        .partition-table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .partition-table th,
+        .partition-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .partition-table th {
+            color: #888;
+            font-weight: 500;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .partition-table td {
+            font-size: 14px;
+        }
+
+        .partition-bar {
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .partition-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .segment-system {
+            background: #ff6b00;
+        }
+
+        .segment-data {
+            background: #00ff88;
+        }
+
+        .segment-free {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Progress */
+        .progress-container {
+            margin: 48px 0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .progress-percent {
+            font-size: 14px;
+            color: #ff6b00;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b00 0%, #ff8533 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .install-log {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #888;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .install-log .success {
+            color: #00ff88;
+        }
+
+        .install-log .warning {
+            color: #ffaa00;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 48px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b00 0%, #e55d00 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(255, 107, 0, 0.3);
+            background: rgba(255, 107, 0, 0.05);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 107, 0, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #ff6b00;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox.checked {
+            background: #ff6b00;
+            border-color: #ff6b00;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 24px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+            text-align: center;
+            color: #555;
+            font-size: 12px;
+        }
+
+        .footer span {
+            color: #ff6b00;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="installer-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="logo-text">Traxx <span>X</span> Code OS</div>
+            </div>
+            
+            <div class="steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Welcome</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Language & Region</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Installation Type</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Partitioning</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-label">User Setup</div>
+                </div>
+                <div class="step" data-step="6">
+                    <div class="step-number">6</div>
+                    <div class="step-label">Installing</div>
+                </div>
+                <div class="step" data-step="7">
+                    <div class="step-number">7</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <span>Traxxion Tech</span> • Zimbabwe 🇿🇼
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Step 1: Welcome -->
+            <div class="step-content active" id="step-1">
+                <div class="header">
+                    <h1>Welcome to <span>Traxx X Code OS</span> V3</h1>
+                    <p>Thank you for choosing Traxx X Code OS. Let's get you set up!</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <h3>Modern Desktop</h3>
+                        <p>Experience the Traxx Desktop Engine - a beautiful, responsive desktop environment designed for productivity.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>Traxx AI</h3>
+                        <p>Your intelligent assistant built right in. Get help with tasks, coding, and more - online or offline.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <h3>Cloud Sync</h3>
+                        <p>Keep your files and settings synchronized across all your devices with Traxx Cloud integration.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Developer Ready</h3>
+                        <p>Pre-installed with Node.js, Python, Git, and Docker. Everything you need to start coding.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h3>Traxx Store</h3>
+                        <p>Discover and install thousands of applications with our curated app store.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Secure & Private</h3>
+                        <p>Built on Linux with security in mind. Your data stays yours.</p>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="nextStep()">Install Traxx OS</button>
+                    <button class="btn btn-secondary" onclick="tryDemo()">Try Demo Mode</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Language & Region -->
+            <div class="step-content" id="step-2">
+                <div class="header">
+                    <h1>Language & <span>Region</span></h1>
+                    <p>Select your preferred language and regional settings.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Language</label>
+                    <select class="form-select" id="language-select">
+                        <option value="en-US">English (US)</option>
+                        <option value="en-GB">English (UK)</option>
+                        <option value="sn">Shona</option>
+                        <option value="nd">Ndebele</option>
+                        <option value="af">Afrikaans</option>
+                        <option value="pt">Português</option>
+                        <option value="fr">Français</option>
+                        <option value="es">Español</option>
+                        <option value="de">Deutsch</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Time Zone</label>
+                    <select class="form-select" id="timezone-select">
+                        <option value="Africa/Harare">Africa/Harare (GMT+2)</option>
+                        <option value="Africa/Johannesburg">Africa/Johannesburg (GMT+2)</option>
+                        <option value="Africa/Lagos">Africa/Lagos (GMT+1)</option>
+                        <option value="Europe/London">Europe/London (GMT+0)</option>
+                        <option value="America/New_York">America/New York (GMT-5)</option>
+                        <option value="America/Los_Angeles">America/Los Angeles (GMT-8)</option>
+                        <option value="Asia/Tokyo">Asia/Tokyo (GMT+9)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Keyboard Layout</label>
+                    <select class="form-select" id="keyboard-select">
+                        <option value="us">English (US)</option>
+                        <option value="uk">English (UK)</option>
+                        <option value="za">South African</option>
+                    </select>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Installation Type -->
+            <div class="step-content" id="step-3">
+                <div class="header">
+                    <h1>Installation <span>Type</span></h1>
+                    <p>Choose how you want to install Traxx X Code OS.</p>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 16px; max-width: 600px;">
+                    <div class="feature-card" style="cursor: pointer;" onclick="selectInstallType('erase')">
+                        <h3><i class="fas fa-hdd" style="margin-right: 8px; color: #ff6b00;"></i> Erase Disk and Install</h3>
+                        <p style="margin-top: 8px;">This will erase everything on the selected disk and install Traxx OS. Recommended for new installations.</p>
+                    </div>
+                    
+                    <div class="feature-card" style="cursor: pointer;" onclick="selectInstallType('alongside')">
+                        <h3><i class="fas fa-columns" style="margin-right: 8px; color: #ff6b00;"></i> Install Alongside Windows</h3>
+                        <p style="margin-top: 8px;">Keep your Windows installation and install Traxx OS alongside it. You can choose which OS to boot at startup.</p>
+                    </div>
+                    
+                    <div class="feature-card" style="cursor: pointer;" onclick="selectInstallType('custom')">
+                        <h3><i class="fas fa-cogs" style="margin-right: 8px; color: #ff6b00;"></i> Custom Partitioning</h3>
+                        <p style="margin-top: 8px;">Manually configure partitions. Recommended for advanced users who want full control.</p>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Partitioning -->
+            <div class="step-content" id="step-4">
+                <div class="header">
+                    <h1>Disk <span>Partitioning</span></h1>
+                    <p>Configure your disk partitions.</p>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px; max-width: 800px;">
+                    <div style="margin-bottom: 16px;">
+                        <strong>Selected Disk:</strong> 256 GB SSD (sda)
+                    </div>
+                    
+                    <div class="partition-bar" style="margin-bottom: 24px;">
+                        <div class="partition-segment segment-system" style="width: 30%;">System (80GB)</div>
+                        <div class="partition-segment segment-data" style="width: 20%;">Home (50GB)</div>
+                        <div class="partition-segment segment-free" style="width: 50%;">Free (126GB)</div>
+                    </div>
+                    
+                    <table class="partition-table">
+                        <thead>
+                            <tr>
+                                <th>Partition</th>
+                                <th>Size</th>
+                                <th>Type</th>
+                                <th>Mount Point</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>/dev/sda1</td>
+                                <td>512 MB</td>
+                                <td>EFI System</td>
+                                <td>/boot/efi</td>
+                            </tr>
+                            <tr>
+                                <td>/dev/sda2</td>
+                                <td>80 GB</td>
+                                <td>Ext4</td>
+                                <td>/</td>
+                            </tr>
+                            <tr>
+                                <td>/dev/sda3</td>
+                                <td>50 GB</td>
+                                <td>Ext4</td>
+                                <td>/home</td>
+                            </tr>
+                            <tr>
+                                <td>/dev/sda4</td>
+                                <td>8 GB</td>
+                                <td>Swap</td>
+                                <td>swap</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 5: User Setup -->
+            <div class="step-content" id="step-5">
+                <div class="header">
+                    <h1>Create Your <span>Account</span></h1>
+                    <p>Set up your user account for Traxx X Code OS.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" class="form-input" id="user-name" placeholder="Full Name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Computer Name</label>
+                    <input type="text" class="form-input" id="computer-name" placeholder="traxx-pc">
+                </div>
+                
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-input" id="username" placeholder="Username">
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-input" id="password" placeholder="Choose a strong password">
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" class="form-input" id="confirm-password" placeholder="Confirm your password">
+                </div>
+                
+                <div class="checkbox-group" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span class="checkbox-label">Log in automatically (not recommended)</span>
+                </div>
+                
+                <div class="checkbox-group" onclick="toggleCheckbox(this)">
+                    <div class="checkbox checked"></div>
+                    <span class="checkbox-label">Encrypt my home folder</span>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn btn-primary" onclick="startInstallation()">Install Now</button>
+                </div>
+            </div>
+
+            <!-- Step 6: Installing -->
+            <div class="step-content" id="step-6">
+                <div class="header">
+                    <h1>Installing <span>Traxx OS</span></h1>
+                    <p>Please wait while we set up your system...</p>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span class="progress-label" id="install-status">Copying files...</span>
+                        <span class="progress-percent" id="install-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="install-log" id="install-log">
+                    <div>[INFO] Starting installation...</div>
+                    <div>[INFO] Preparing disk partitions...</div>
+                    <div class="success">[OK] Partitions created successfully</div>
+                    <div>[INFO] Copying system files...</div>
+                </div>
+            </div>
+
+            <!-- Step 7: Complete -->
+            <div class="step-content" id="step-7">
+                <div class="header" style="text-align: center;">
+                    <div style="font-size: 64px; color: #00ff88; margin-bottom: 24px;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h1>Installation <span>Complete!</span></h1>
+                    <p>Traxx X Code OS V3 is now installed and ready to use.</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 48px;">
+                    <div style="color: #888; margin-bottom: 24px;">
+                        Thank you for choosing Traxx X Code OS!<br>
+                        <strong>Created by Traxxion Tech</strong> • Proudly Made in Zimbabwe 🇿🇼
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="restartNow()">
+                        <i class="fas fa-redo" style="margin-right: 8px;"></i> Restart Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 7;
+        let installInterval = null;
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+                document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+                document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('completed');
+                
+                currentStep++;
+                
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+                document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+                
+                currentStep--;
+                
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('completed');
+                document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
+            }
+        }
+
+        function selectInstallType(type) {
+            console.log('Selected install type:', type);
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            });
+            event.currentTarget.style.borderColor = '#ff6b00';
+        }
+
+        function toggleCheckbox(group) {
+            const checkbox = group.querySelector('.checkbox');
+            checkbox.classList.toggle('checked');
+        }
+
+        function startInstallation() {
+            nextStep();
+            simulateInstallation();
+        }
+
+        function simulateInstallation() {
+            let progress = 0;
+            const statusMessages = [
+                'Copying files...',
+                'Installing kernel...',
+                'Setting up desktop environment...',
+                'Configuring Traxx AI...',
+                'Installing applications...',
+                'Configuring user account...',
+                'Setting up boot loader...',
+                'Finalizing installation...'
+            ];
+            let statusIndex = 0;
+
+            installInterval = setInterval(() => {
+                progress += Math.random() * 3 + 1;
+                if (progress > 100) progress = 100;
+
+                document.getElementById('progress-fill').style.width = progress + '%';
+                document.getElementById('install-percent').textContent = Math.round(progress) + '%';
+
+                if (progress > (statusIndex + 1) * 12 && statusIndex < statusMessages.length - 1) {
+                    statusIndex++;
+                    document.getElementById('install-status').textContent = statusMessages[statusIndex];
+                    const log = document.getElementById('install-log');
+                    log.innerHTML += `<div class="success">[OK] ${statusMessages[statusIndex - 1]}</div>`;
+                    log.innerHTML += `<div>[INFO] ${statusMessages[statusIndex]}...</div>`;
+                    log.scrollTop = log.scrollHeight;
+                }
+
+                if (progress >= 100) {
+                    clearInterval(installInterval);
+                    setTimeout(() => {
+                        nextStep();
+                    }, 1000);
+                }
+            }, 200);
+        }
+
+        function tryDemo() {
+            alert('Demo mode will launch Traxx OS without installation.');
+        }
+
+        function restartNow() {
+            alert('System will restart now. Remove the installation media when prompted.');
+        }
+    </script>
+</body>
+</html>

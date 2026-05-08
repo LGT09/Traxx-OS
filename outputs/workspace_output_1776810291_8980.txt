@@ -1,0 +1,16 @@
+./desktop-engine/tde-core/main.js
+./desktop-engine/tde-core/desktop.js
+./desktop-engine/tde-core/login.html
+./desktop-engine/tde-core/boot-splash.html
+./desktop-engine/tde-core/desktop.css
+./desktop-engine/tde-core/desktop.html
+./desktop-engine/tde-core/package.json
+./index.html
+./ai-assistant/traxx-ai-core.js
+./app-store/traxx-store-backend.js
+./docs/README.md
+./docs/PROJECT_REPORT.md
+./cloud-sync/traxx-cloud.js
+./build/scripts/build-iso.sh
+./build/scripts/installer-wizard.html
+./core/system_config.json

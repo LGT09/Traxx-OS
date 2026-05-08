@@ -1,0 +1,14 @@
+traxx-os/desktop-engine/tde-core/login.html
+traxx-os/desktop-engine/tde-core/boot-splash.html
+traxx-os/desktop-engine/tde-core/desktop.html
+traxx-os/index.html
+traxx-os/apps/calculator/calculator.html
+traxx-os/apps/system-monitor/system-monitor.html
+traxx-os/apps/calendar/calendar.html
+traxx-os/apps/sync-player/sync-player.html
+traxx-os/apps/settings/settings.html
+traxx-os/apps/notes/notes.html
+traxx-os/apps/photos/photos.html
+traxx-os/apps/control-center/control-center.html
+traxx-os/apps/weather-widget/weather-widget.html
+traxx-os/build/scripts/installer-wizard.html

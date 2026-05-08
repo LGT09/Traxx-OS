@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal - Traxx X Code OS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #0d0d0d;
+            --bg-tertiary: #141414;
+            --accent: #ff6b00;
+            --accent-hover: #ff8533;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --border: #1a1a1a;
+            --green: #00ff00;
+            --cyan: #00ffff;
+            --yellow: #ffff00;
+            --red: #ff5555;
+            --magenta: #ff79c6;
+            --blue: #6272a4;
+            --white: #f8f8f2;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            height: 40px;
+            gap: 4px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 120px;
+            max-width: 200px;
+        }
+
+        .tab.active {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .tab-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        .tab-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .tab-close {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+
+        .tab-close:hover {
+            background: var(--red);
+            opacity: 1;
+        }
+
+        .new-tab-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .new-tab-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar-btn {
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--accent);
+        }
+
+        .toolbar-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border);
+        }
+
+        .terminal-info {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+
+        /* Terminal Container */
+        .terminal-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            padding: 8px;
+        }
+
+        .sidebar-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item.active {
+            background: rgba(255, 107, 0, 0.2);
+            color: var(--accent);
+        }
+
+        .sidebar-item svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Terminal Output */
+        .terminal-output {
+            flex: 1;
+            background: var(--bg-primary);
+            padding: 16px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .output-line {
+            margin-bottom: 2px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .output-line.command {
+            color: var(--cyan);
+        }
+
+        .output-line.output {
+            color: var(--text-primary);
+        }
+
+        .output-line.error {
+            color: var(--red);
+        }
+
+        .output-line.success {
+            color: var(--green);
+        }
+
+        .output-line.warning {
+            color: var(--yellow);
+        }
+
+        .output-line.info {
+            color: var(--blue);
+        }
+
+        .prompt {
+            display: inline;
+        }
+
+        .prompt-user {
+            color: var(--green);
+        }
+
+        .prompt-host {
+            color: var(--cyan);
+        }
+
+        .prompt-path {
+            color: var(--accent);
+        }
+
+        .prompt-symbol {
+            color: var(--text-secondary);
+        }
+
+        /* Input Line */
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: inherit;
+            caret-color: var(--accent);
+        }
+
+        .terminal-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--accent);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Suggestions */
+        .suggestions {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .suggestions.visible {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .suggestion-item:hover,
+        .suggestion-item.selected {
+            background: var(--bg-tertiary);
+        }
+
+        .suggestion-item svg {
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Resize Handle */
+        .resize-handle {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            cursor: ew-resize;
+            background: transparent;
+            transition: background 0.2s;
+        }
+
+        .resize-handle:hover {
+            background: var(--accent);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: fixed;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 160px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            display: none;
+        }
+
+        .context-menu.visible {
+            display: block;
+        }
+
+        .context-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+
+        .context-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .context-separator {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        /* ANSI Colors */
+        .ansi-black { color: #282a36; }
+        .ansi-red { color: #ff5555; }
+        .ansi-green { color: #50fa7b; }
+        .ansi-yellow { color: #f1fa8c; }
+        .ansi-blue { color: #6272a4; }
+        .ansi-magenta { color: #ff79c6; }
+        .ansi-cyan { color: #8be9fd; }
+        .ansi-white { color: #f8f8f2; }
+
+        /* ASCII Art Banner */
+        .banner {
+            color: var(--accent);
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        /* Selection */
+        ::selection {
+            background: rgba(255, 107, 0, 0.3);
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab active" data-tab="0">
+            <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="4,17 10,11 4,5"/>
+                <line x1="12" y1="19" x2="20" y2="19"/>
+            </svg>
+            <span class="tab-title">Terminal</span>
+            <div class="tab-close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 10px; height: 10px;">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </div>
+        </div>
+        <button class="new-tab-btn" id="newTabBtn" title="New Tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <button class="toolbar-btn" id="clearBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3,6 5,6 21,6"/>
+                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+            </svg>
+            Clear
+        </button>
+        <button class="toolbar-btn" id="copyBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            Copy
+        </button>
+        <button class="toolbar-btn" id="pasteBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
+                <rect x="8" y="2" width="8" height="4" rx="1"/>
+            </svg>
+            Paste
+        </button>
+        <div class="toolbar-divider"></div>
+        <button class="toolbar-btn" id="zoomInBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+        </button>
+        <button class="toolbar-btn" id="zoomOutBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+        </button>
+        <div class="terminal-info">
+            <span class="status-dot"></span>
+            <span>traxx@localhost</span>
+            <span id="terminalSize">80x24</span>
+        </div>
+    </div>
+
+    <!-- Terminal Container -->
+    <div class="terminal-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Quick Commands</div>
+                <div class="sidebar-item" data-cmd="ls -la">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    List Files
+                </div>
+                <div class="sidebar-item" data-cmd="pwd">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4l2 2"/>
+                    </svg>
+                    Current Dir
+                </div>
+                <div class="sidebar-item" data-cmd="df -h">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                    </svg>
+                    Disk Usage
+                </div>
+                <div class="sidebar-item" data-cmd="free -h">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="4" y="4" width="16" height="16" rx="2"/>
+                        <rect x="9" y="9" width="6" height="6"/>
+                    </svg>
+                    Memory
+                </div>
+                <div class="sidebar-item" data-cmd="top -n 1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                    </svg>
+                    Processes
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Git Commands</div>
+                <div class="sidebar-item" data-cmd="git status">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="18" cy="18" r="3"/>
+                        <circle cx="6" cy="6" r="3"/>
+                        <path d="M6 21V9a9 9 0 009 9"/>
+                    </svg>
+                    Git Status
+                </div>
+                <div class="sidebar-item" data-cmd="git log --oneline -10">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    Git Log
+                </div>
+                <div class="sidebar-item" data-cmd="git branch -a">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="6" y1="3" x2="6" y2="15"/>
+                        <circle cx="18" cy="6" r="3"/>
+                        <circle cx="6" cy="18" r="3"/>
+                        <path d="M18 9a9 9 0 01-9 9"/>
+                    </svg>
+                    Branches
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminal Output -->
+        <div class="terminal-output" id="terminalOutput">
+            <!-- Output will be rendered here -->
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-item" data-action="copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            Copy
+        </div>
+        <div class="context-item" data-action="paste">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
+                <rect x="8" y="2" width="8" height="4" rx="1"/>
+            </svg>
+            Paste
+        </div>
+        <div class="context-separator"></div>
+        <div class="context-item" data-action="clear">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                <polyline points="3,6 5,6 21,6"/>
+                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+            </svg>
+            Clear Terminal
+        </div>
+        <div class="context-item" data-action="selectAll">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+            </svg>
+            Select All
+        </div>
+    </div>
+
+    <script>
+        // Terminal Application
+        const Terminal = {
+            history: [],
+            historyIndex: -1,
+            currentLine: '',
+            output: [],
+            user: 'traxx',
+            host: 'localhost',
+            path: '~',
+            fontSize: 13,
+
+            // Mock file system
+            fileSystem: {
+                '/home/traxx': {
+                    'Desktop': 'dir',
+                    'Documents': 'dir',
+                    'Downloads': 'dir',
+                    'Music': 'dir',
+                    'Pictures': 'dir',
+                    'Videos': 'dir',
+                    '.bashrc': 'file',
+                    '.profile': 'file',
+                    'readme.txt': 'file',
+                },
+                '/home/traxx/Documents': {
+                    'work': 'dir',
+                    'personal': 'dir',
+                    'report.pdf': 'file',
+                    'notes.md': 'file',
+                },
+                '/home/traxx/Downloads': {
+                    'traxx-os-v3.iso': 'file',
+                    'wallpapers.zip': 'file',
+                }
+            },
+
+            commands: {
+                help: {
+                    description: 'Show available commands',
+                    execute: () => {
+                        return `
+<span class="success">Available Commands:</span>
+
+  <span class="cyan">File Operations:</span>
+    ls [path]      - List directory contents
+    cd [path]      - Change directory
+    pwd            - Print working directory
+    mkdir [name]   - Create directory
+    touch [name]   - Create empty file
+    rm [name]      - Remove file
+    cat [file]     - Display file contents
+    cp [src] [dst] - Copy file
+    mv [src] [dst] - Move/rename file
+
+  <span class="cyan">System Information:</span>
+    whoami         - Display current user
+    hostname       - Display system hostname
+    uname [-a]     - System information
+    date           - Display current date/time
+    uptime         - Show system uptime
+    df [-h]        - Disk space usage
+    free [-h]      - Memory usage
+    ps             - Running processes
+    top            - Process monitor
+    kill [pid]     - Kill process
+
+  <span class="cyan">Network:</span>
+    ping [host]    - Ping network host
+    ifconfig       - Network interfaces
+    curl [url]     - Transfer data
+
+  <span class="cyan">Other:</span>
+    clear          - Clear terminal
+    echo [text]    - Print text
+    history        - Command history
+    neofetch       - System info display
+    exit           - Close terminal
+`;
+                    }
+                },
+
+                ls: {
+                    description: 'List directory contents',
+                    execute: function(args) {
+                        const path = Terminal.path === '~' ? '/home/traxx' : Terminal.path;
+                        const dir = Terminal.fileSystem[path] || {};
+                        const items = Object.entries(dir);
+                        
+                        if (args.includes('-la') || args.includes('-l')) {
+                            let output = `<span class="text-muted">total ${items.length}</span>\n`;
+                            items.forEach(([name, type]) => {
+                                const perm = type === 'dir' ? 'drwxr-xr-x' : '-rw-r--r--';
+                                const size = type === 'dir' ? '4096' : '1024';
+                                const date = 'Apr 23 12:00';
+                                const color = type === 'dir' ? 'cyan' : 'white';
+                                output += `<span class="ansi-green">${perm}</span>  1 traxx traxx  <span class="ansi-yellow">${size.padStart(5)}</span> ${date} <span class="${color}">${name}</span>\n`;
+                            });
+                            return output;
+                        }
+                        
+                        return items.map(([name, type]) => {
+                            const color = type === 'dir' ? 'cyan' : 'white';
+                            return `<span class="${color}">${name}</span>`;
+                        }).join('  ');
+                    }
+                },
+
+                cd: {
+                    description: 'Change directory',
+                    execute: function(args) {
+                        if (!args[0] || args[0] === '~') {
+                            Terminal.path = '~';
+                            return '';
+                        }
+                        if (args[0] === '..') {
+                            if (Terminal.path !== '~') {
+                                const parts = Terminal.path.split('/');
+                                parts.pop();
+                                Terminal.path = parts.join('/') || '~';
+                            }
+                            return '';
+                        }
+                        const newPath = Terminal.path === '~' ? `/home/traxx/${args[0]}` : `${Terminal.path}/${args[0]}`;
+                        const basePath = Terminal.path === '~' ? '/home/traxx' : Terminal.path;
+                        if (Terminal.fileSystem[basePath] && Terminal.fileSystem[basePath][args[0]] === 'dir') {
+                            Terminal.path = newPath;
+                        } else {
+                            return `<span class="error">cd: ${args[0]}: No such directory</span>`;
+                        }
+                        return '';
+                    }
+                },
+
+                pwd: {
+                    description: 'Print working directory',
+                    execute: () => Terminal.path === '~' ? '/home/traxx' : Terminal.path
+                },
+
+                whoami: {
+                    description: 'Display current user',
+                    execute: () => Terminal.user
+                },
+
+                hostname: {
+                    description: 'Display system hostname',
+                    execute: () => Terminal.host
+                },
+
+                date: {
+                    description: 'Display current date/time',
+                    execute: () => new Date().toString()
+                },
+
+                uptime: {
+                    description: 'Show system uptime',
+                    execute: () => {
+                        const now = new Date();
+                        return ` ${now.toLocaleTimeString()} up 3 days, 14:23, 1 user, load average: 0.45, 0.52, 0.49`;
+                    }
+                },
+
+                uname: {
+                    description: 'System information',
+                    execute: (args) => {
+                        if (args.includes('-a')) {
+                            return 'Linux traxx-os 6.1.0-traxx #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Traxx';
+                        }
+                        return 'Linux';
+                    }
+                },
+
+                clear: {
+                    description: 'Clear terminal',
+                    execute: () => {
+                        Terminal.output = [];
+                        Terminal.render();
+                        return null;
+                    }
+                },
+
+                echo: {
+                    description: 'Print text',
+                    execute: (args) => args.join(' ')
+                },
+
+                history: {
+                    description: 'Command history',
+                    execute: () => {
+                        return Terminal.history.map((cmd, i) => `  ${i + 1}  ${cmd}`).join('\n');
+                    }
+                },
+
+                neofetch: {
+                    description: 'System info display',
+                    execute: () => {
+                        return `
+<span class="banner">       ████████╗██████╗  █████╗ ███████╗███████╗██╗     
+       ╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██╔════╝██║     
+          ██║   ██████╔╝███████║███████╗█████╗  ██║     
+          ██║   ██╔══██╗██╔══██║╚════██║██╔══╝  ██║     
+          ██║   ██║  ██║██║  ██║███████║███████╗███████╗
+          ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝</span>
+                 <span class="cyan">Traxx X Code OS V3</span>
+
+<span class="cyan">traxx@${Terminal.host}</span>
+-----------
+<span class="cyan">OS:</span> Traxx X Code OS V3
+<span class="cyan">Kernel:</span> 6.1.0-traxx
+<span class="cyan">Uptime:</span> 3 days, 14 hours
+<span class="cyan">Packages:</span> 1337 (traxx-pkg)
+<span class="cyan">Shell:</span> traxx-shell 1.0
+<span class="cyan">DE:</span> Traxx Desktop Engine
+<span class="cyan">WM:</span> TDE Window Manager
+<span class="cyan">Terminal:</span> Traxx Terminal
+<span class="cyan">CPU:</span> AMD Ryzen 9 5950X (32) @ 4.9GHz
+<span class="cyan">GPU:</span> NVIDIA RTX 4090
+<span class="cyan">Memory:</span> 8192MiB / 65536MiB
+
+<span style="color: #ff6b00;">●●●●●●●●●●●●●●●●</span>
+`;
+                    }
+                },
+
+                df: {
+                    description: 'Disk space usage',
+                    execute: (args) => {
+                        if (args.includes('-h')) {
+                            return `Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       256G  141G  115G  56% /
+/dev/sda2       512G   48G  464G  10% /home
+tmpfs           8.0G     0  8.0G   0% /tmp`;
+                        }
+                        return `Filesystem     1K-blocks      Used Available Use% Mounted on
+/dev/sda1       268435456 147849216 120586240  56% /
+/dev/sda2       536870912  50331648 486539264  10% /home`;
+                    }
+                },
+
+                free: {
+                    description: 'Memory usage',
+                    execute: (args) => {
+                        if (args.includes('-h')) {
+                            return `              total        used        free      shared  buff/cache   available
+Mem:           64Gi       8.0Gi        52Gi       256Mi       4.0Gi        55Gi
+Swap:         8.0Gi          0B       8.0Gi`;
+                        }
+                        return `              total        used        free      shared  buff/cache   available
+Mem:       67108864     8388608    54525952      262144     4194304    57671680
+Swap:       8388608           0     8388608`;
+                    }
+                },
+
+                ps: {
+                    description: 'Running processes',
+                    execute: () => {
+                        return `  PID TTY          TIME CMD
+    1 ?        00:00:01 systemd
+  256 ?        00:00:00 tde-init
+  512 ?        00:00:05 traxx-bar
+  768 ?        00:00:03 traxx-ai
+ 1024 pts/0    00:00:00 bash
+ 2048 pts/0    00:00:00 ps`;
+                    }
+                },
+
+                top: {
+                    description: 'Process monitor',
+                    execute: () => {
+                        return `top - 14:23:45 up 3 days, 14:23, 1 user, load average: 0.45, 0.52, 0.49
+Tasks: 142 total,   1 running, 141 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  4.5 us,  2.3 sy,  0.0 ni, 92.8 id,  0.3 wa,  0.0 hi,  0.1 si
+MiB Mem :  65536.0 total,  53248.0 free,   8192.0 used,   4096.0 buff/cache
+MiB Swap:   8192.0 total,   8192.0 free,      0.0 used.  55296.0 avail Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 1024 traxx     20   0  124567   4521   3214 S   2.3   0.1   0:12.34 traxx-ai
+  512 traxx     20   0   89543   2341   1567 S   1.2   0.0   0:45.67 traxx-bar
+ 2048 traxx     20   0   45678   1234    890 S   0.5   0.0   0:00.01 top
+    1 root      20   0  234567  12345   8901 S   0.0   0.0   0:01.23 systemd`;
+                    }
+                },
+
+                ifconfig: {
+                    description: 'Network interfaces',
+                    execute: () => {
+                        return `eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.100  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::1  prefixlen 64  scopeid 0x20<link>
+        ether 00:11:22:33:44:55  txqueuelen 1000  (Ethernet)
+        RX packets 1234567  bytes 1234567890 (1.2 GB)
+        TX packets 987654  bytes 87654321 (87.6 MB)
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)`;
+                    }
+                },
+
+                ping: {
+                    description: 'Ping network host',
+                    execute: (args) => {
+                        if (!args[0]) return '<span class="error">ping: usage error: Destination address required</span>';
+                        return `PING ${args[0]} (93.184.216.34) 56(84) bytes of data.
+64 bytes from ${args[0]}: icmp_seq=1 ttl=56 time=12.3 ms
+64 bytes from ${args[0]}: icmp_seq=2 ttl=56 time=11.8 ms
+64 bytes from ${args[0]}: icmp_seq=3 ttl=56 time=13.1 ms
+
+--- ${args[0]} ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 11.812/12.403/13.145/0.552 ms`;
+                    }
+                },
+
+                cat: {
+                    description: 'Display file contents',
+                    execute: (args) => {
+                        if (!args[0]) return '<span class="error">cat: missing operand</span>';
+                        const files = {
+                            'readme.txt': 'Welcome to Traxx X Code OS V3!\n\nDeveloped by Vincent Ganiza\nTraxxion Tech - Zimbabwe\n\nFor more information, visit: https://traxxion.tech',
+                            '.bashrc': '# ~/.bashrc: executed by bash for non-login shells.\n\nexport PS1="\\u@\\h:\\w\\$ "\nalias ll="ls -la"\nalias la="ls -A"',
+                            'notes.md': '# Project Notes\n\n## Todo\n- Complete OS development\n- Add more applications\n- Create installer\n\n## Done\n- Desktop environment\n- File manager\n- Terminal'
+                        };
+                        return files[args[0]] || `<span class="error">cat: ${args[0]}: No such file or directory</span>`;
+                    }
+                },
+
+                mkdir: {
+                    description: 'Create directory',
+                    execute: (args) => {
+                        if (!args[0]) return '<span class="error">mkdir: missing operand</span>';
+                        return `<span class="success">Directory '${args[0]}' created</span>`;
+                    }
+                },
+
+                touch: {
+                    description: 'Create empty file',
+                    execute: (args) => {
+                        if (!args[0]) return '<span class="error">touch: missing operand</span>';
+                        return '';
+                    }
+                },
+
+                rm: {
+                    description: 'Remove file',
+                    execute: (args) => {
+                        if (!args[0]) return '<span class="error">rm: missing operand</span>';
+                        return '';
+                    }
+                },
+
+                exit: {
+                    description: 'Close terminal',
+                    execute: () => {
+                        Terminal.addOutput('<span class="warning">Terminal session ended.</span>');
+                        Terminal.render();
+                        setTimeout(() => window.close(), 500);
+                        return null;
+                    }
+                },
+
+                traxx: {
+                    description: 'Traxx OS info',
+                    execute: () => {
+                        return `
+<span class="accent">╔═══════════════════════════════════════════════════════════╗
+║                    TRAXX X CODE OS V3                      ║
+║                                                           ║
+║   Developed with ❤️  by Vincent Ganiza                    ║
+║   Traxxion Tech - Zimbabwe 🇿🇼                             ║
+║                                                           ║
+║   Version: 3.0.0                                          ║
+║   Kernel: 6.1.0-traxx                                     ║
+║   Desktop: Traxx Desktop Engine (TDE)                     ║
+║                                                           ║
+║   Type 'help' for available commands                      ║
+╚═══════════════════════════════════════════════════════════╝</span>`;
+                    }
+                }
+            },
+
+            init() {
+                this.render();
+                this.bindEvents();
+                this.showWelcome();
+            },
+
+            showWelcome() {
+                const welcome = `
+<span class="banner"> ████████╗██████╗  █████╗ ███████╗███████╗██╗     
+ ╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██╔════╝██║     
+    ██║   ██████╔╝███████║███████╗█████╗  ██║     
+    ██║   ██╔══██╗██╔══██║╚════██║██╔══╝  ██║     
+    ██║   ██║  ██║██║  ██║███████║███████╗███████╗
+    ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝</span>
+        <span class="cyan">X Code OS V3 - Welcome to Traxx Terminal</span>
+
+Type <span class="accent">'help'</span> for available commands.
+Type <span class="accent">'neofetch'</span> for system information.
+
+`;
+                this.addOutput(welcome);
+                this.render();
+            },
+
+            bindEvents() {
+                const output = document.getElementById('terminalOutput');
+                
+                // Keyboard events
+                document.addEventListener('keydown', (e) => this.handleKeyDown(e));
+
+                // Toolbar buttons
+                document.getElementById('clearBtn').addEventListener('click', () => this.commands.clear.execute([]));
+                document.getElementById('copyBtn').addEventListener('click', () => this.copySelection());
+                document.getElementById('pasteBtn').addEventListener('click', () => this.paste());
+                document.getElementById('zoomInBtn').addEventListener('click', () => this.zoomIn());
+                document.getElementById('zoomOutBtn').addEventListener('click', () => this.zoomOut());
+
+                // Sidebar commands
+                document.querySelectorAll('.sidebar-item[data-cmd]').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const cmd = item.dataset.cmd;
+                        this.executeCommand(cmd);
+                    });
+                });
+
+                // Context menu
+                output.addEventListener('contextmenu', (e) => this.showContextMenu(e));
+                document.addEventListener('click', () => this.hideContextMenu());
+                document.querySelectorAll('.context-item').forEach(item => {
+                    item.addEventListener('click', () => this.handleContextAction(item.dataset.action));
+                });
+            },
+
+            handleKeyDown(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.submitCommand();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    this.navigateHistory(-1);
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    this.navigateHistory(1);
+                } else if (e.key === 'Tab') {
+                    e.preventDefault();
+                    this.autocomplete();
+                } else if (e.key === 'c' && e.ctrlKey) {
+                    e.preventDefault();
+                    this.cancelCommand();
+                } else if (e.key === 'l' && e.ctrlKey) {
+                    e.preventDefault();
+                    this.commands.clear.execute([]);
+                } else if (e.key === 'Backspace') {
+                    this.currentLine = this.currentLine.slice(0, -1);
+                    this.render();
+                } else if (e.key.length === 1) {
+                    this.currentLine += e.key;
+                    this.render();
+                }
+            },
+
+            submitCommand() {
+                const cmd = this.currentLine.trim();
+                
+                if (cmd) {
+                    this.history.push(cmd);
+                    this.historyIndex = this.history.length;
+                    this.addOutput(this.renderPrompt() + cmd);
+                    this.executeCommand(cmd);
+                } else {
+                    this.addOutput(this.renderPrompt());
+                }
+                
+                this.currentLine = '';
+                this.render();
+            },
+
+            executeCommand(cmdLine) {
+                const parts = cmdLine.split(' ');
+                const cmd = parts[0];
+                const args = parts.slice(1);
+
+                if (this.commands[cmd]) {
+                    const result = this.commands[cmd].execute(args);
+                    if (result !== null && result !== undefined) {
+                        this.addOutput(result);
+                    }
+                } else if (cmd) {
+                    this.addOutput(`<span class="error">traxx-shell: ${cmd}: command not found</span>`);
+                }
+                
+                this.render();
+            },
+
+            navigateHistory(direction) {
+                const newIndex = this.historyIndex + direction;
+                if (newIndex >= 0 && newIndex < this.history.length) {
+                    this.historyIndex = newIndex;
+                    this.currentLine = this.history[newIndex];
+                } else if (newIndex >= this.history.length) {
+                    this.historyIndex = this.history.length;
+                    this.currentLine = '';
+                }
+                this.render();
+            },
+
+            autocomplete() {
+                const partial = this.currentLine.split(' ').pop();
+                const commands = Object.keys(this.commands);
+                const matches = commands.filter(cmd => cmd.startsWith(partial));
+                
+                if (matches.length === 1) {
+                    const parts = this.currentLine.split(' ');
+                    parts[parts.length - 1] = matches[0];
+                    this.currentLine = parts.join(' ');
+                    this.render();
+                } else if (matches.length > 1) {
+                    this.addOutput(this.renderPrompt() + this.currentLine);
+                    this.addOutput(matches.join('  '));
+                    this.render();
+                }
+            },
+
+            cancelCommand() {
+                this.addOutput(this.renderPrompt() + this.currentLine + '^C');
+                this.currentLine = '';
+                this.render();
+            },
+
+            renderPrompt() {
+                return `<span class="prompt"><span class="prompt-user">${this.user}</span><span class="prompt-symbol">@</span><span class="prompt-host">${this.host}</span><span class="prompt-symbol">:</span><span class="prompt-path">${this.path}</span><span class="prompt-symbol">$ </span></span>`;
+            },
+
+            addOutput(text) {
+                this.output.push(text);
+            },
+
+            render() {
+                const container = document.getElementById('terminalOutput');
+                
+                let html = this.output.map(line => `<div class="output-line">${line}</div>`).join('');
+                
+                // Add input line
+                html += `
+                    <div class="output-line input-line">
+                        ${this.renderPrompt()}<span>${this.escapeHtml(this.currentLine)}</span><span class="cursor"></span>
+                    </div>
+                `;
+                
+                container.innerHTML = html;
+                container.scrollTop = container.scrollHeight;
+            },
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+
+            copySelection() {
+                const selection = window.getSelection().toString();
+                if (selection) {
+                    navigator.clipboard.writeText(selection);
+                }
+            },
+
+            paste() {
+                navigator.clipboard.readText().then(text => {
+                    this.currentLine += text;
+                    this.render();
+                });
+            },
+
+            zoomIn() {
+                this.fontSize = Math.min(this.fontSize + 1, 24);
+                document.getElementById('terminalOutput').style.fontSize = this.fontSize + 'px';
+            },
+
+            zoomOut() {
+                this.fontSize = Math.max(this.fontSize - 1, 10);
+                document.getElementById('terminalOutput').style.fontSize = this.fontSize + 'px';
+            },
+
+            showContextMenu(e) {
+                e.preventDefault();
+                const menu = document.getElementById('contextMenu');
+                menu.style.left = e.clientX + 'px';
+                menu.style.top = e.clientY + 'px';
+                menu.classList.add('visible');
+            },
+
+            hideContextMenu() {
+                document.getElementById('contextMenu').classList.remove('visible');
+            },
+
+            handleContextAction(action) {
+                this.hideContextMenu();
+                switch (action) {
+                    case 'copy':
+                        this.copySelection();
+                        break;
+                    case 'paste':
+                        this.paste();
+                        break;
+                    case 'clear':
+                        this.commands.clear.execute([]);
+                        break;
+                    case 'selectAll':
+                        const output = document.getElementById('terminalOutput');
+                        const range = document.createRange();
+                        range.selectNodeContents(output);
+                        const sel = window.getSelection();
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                        break;
+                }
+            }
+        };
+
+        // Initialize
+        Terminal.init();
+    </script>
+</body>
+</html>

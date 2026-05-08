@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traxx X Code OS - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background */
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 70%, rgba(255, 107, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(255, 107, 0, 0.05) 0%, transparent 50%);
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 107, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 107, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Main Container */
+        .login-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 420px;
+            z-index: 10;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 48px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #ff6b00 0%, #e55d00 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px rgba(255, 107, 0, 0.3);
+            position: relative;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 2px solid rgba(255, 107, 0, 0.3);
+            border-radius: 24px;
+            animation: pulse-ring 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.5; }
+        }
+
+        .logo i {
+            font-size: 36px;
+            color: white;
+        }
+
+        .os-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .os-name span {
+            color: #ff6b00;
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: rgba(26, 26, 26, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* User Selection */
+        .user-selection {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .user-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-option:hover {
+            background: rgba(255, 107, 0, 0.1);
+            border-color: rgba(255, 107, 0, 0.3);
+        }
+
+        .user-option.selected {
+            background: rgba(255, 107, 0, 0.15);
+            border-color: #ff6b00;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b00 0%, #e55d00 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-size: 20px;
+            color: white;
+        }
+
+        .user-avatar.guest {
+            background: linear-gradient(135deg, #555 0%, #333 100%);
+        }
+
+        .user-name {
+            font-size: 12px;
+            color: #ccc;
+            text-align: center;
+        }
+
+        /* Password Input */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 16px;
+            transition: color 0.2s ease;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-field::placeholder {
+            color: #666;
+        }
+
+        .input-field:focus {
+            border-color: #ff6b00;
+            background: rgba(255, 107, 0, 0.05);
+        }
+
+        .input-field:focus + i,
+        .input-wrapper:has(.input-field:focus) i {
+            color: #ff6b00;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: #ff6b00;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff6b00 0%, #e55d00 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 0, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn i {
+            transition: transform 0.2s ease;
+        }
+
+        .login-btn:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Alternative Actions */
+        .alt-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .alt-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 13px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .alt-btn:hover {
+            color: #ff6b00;
+        }
+
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 24px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out 0.4s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            color: #555;
+            font-size: 12px;
+        }
+
+        .footer-content span {
+            color: #ff6b00;
+        }
+
+        /* Power Options */
+        .power-options {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            display: flex;
+            gap: 12px;
+            animation: fadeIn 0.5s ease-out 0.4s both;
+        }
+
+        .power-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #888;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .power-btn:hover {
+            background: rgba(255, 107, 0, 0.1);
+            border-color: rgba(255, 107, 0, 0.3);
+            color: #ff6b00;
+        }
+
+        /* Time Display */
+        .time-display {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            text-align: right;
+            animation: fadeIn 0.5s ease-out 0.4s both;
+        }
+
+        .time {
+            font-size: 48px;
+            font-weight: 300;
+            color: white;
+            letter-spacing: 2px;
+        }
+
+        .date {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* Message */
+        .message {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 107, 0, 0.1);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: #ff6b00;
+            display: none;
+        }
+
+        .message.error {
+            background: rgba(255, 68, 68, 0.1);
+            border-color: rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-overlay"></div>
+    <div class="grid-pattern"></div>
+
+    <!-- Time Display -->
+    <div class="time-display">
+        <div class="time" id="time">00:00</div>
+        <div class="date" id="date">Monday, January 1</div>
+    </div>
+
+    <!-- Power Options -->
+    <div class="power-options">
+        <button class="power-btn" title="Accessibility" onclick="showAccessibility()">
+            <i class="fas fa-universal-access"></i>
+        </button>
+        <button class="power-btn" title="Restart" onclick="restartSystem()">
+            <i class="fas fa-redo"></i>
+        </button>
+        <button class="power-btn" title="Shut Down" onclick="shutdownSystem()">
+            <i class="fas fa-power-off"></i>
+        </button>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <div class="os-name">Traxx <span>X</span> Code OS</div>
+            <div class="tagline">Welcome Back</div>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <div class="message" id="message"></div>
+
+            <!-- User Selection -->
+            <div class="user-selection">
+                <div class="section-title">Select User</div>
+                <div class="users-grid">
+                    <div class="user-option selected" data-user="traxx" onclick="selectUser(this)">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="user-name">Traxx User</span>
+                    </div>
+                    <div class="user-option" data-user="admin" onclick="selectUser(this)">
+                        <div class="user-avatar" style="background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <span class="user-name">Admin</span>
+                    </div>
+                    <div class="user-option" data-user="guest" onclick="selectUser(this)">
+                        <div class="user-avatar guest">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <span class="user-name">Guest</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="password" class="input-field" id="password" placeholder="Enter password" autocomplete="off">
+                    <i class="fas fa-lock"></i>
+                    <button class="password-toggle" onclick="togglePassword()">
+                        <i class="fas fa-eye" id="password-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Login Button -->
+            <button class="login-btn" onclick="attemptLogin()">
+                <span>Sign In</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <!-- Alternative Actions -->
+            <div class="alt-actions">
+                <button class="alt-btn" onclick="forgotPassword()">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Forgot Password?</span>
+                </button>
+                <button class="alt-btn" onclick="switchToCloudLogin()">
+                    <i class="fas fa-cloud"></i>
+                    <span>Traxx Cloud Login</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <span>Traxxion Tech</span> • Zimbabwe 🇿🇼 • © 2026
+        </div>
+    </div>
+
+    <script>
+        // Initialize time
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+            const dateStr = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('time').textContent = timeStr;
+            document.getElementById('date').textContent = dateStr;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // User selection
+        let selectedUser = 'traxx';
+        function selectUser(element) {
+            document.querySelectorAll('.user-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedUser = element.dataset.user;
+            document.getElementById('password').focus();
+        }
+
+        // Password toggle
+        let passwordVisible = false;
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('password-icon');
+            passwordVisible = !passwordVisible;
+            input.type = passwordVisible ? 'text' : 'password';
+            icon.className = passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye';
+        }
+
+        // Show message
+        function showMessage(text, isError = false) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message' + (isError ? ' error' : '');
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
+        }
+
+        // Attempt login
+        function attemptLogin() {
+            const password = document.getElementById('password').value;
+            
+            if (selectedUser === 'guest') {
+                showMessage('Signing in as Guest...', false);
+                setTimeout(() => {
+                    if (typeof require !== 'undefined') {
+                        const { ipcRenderer } = require('electron');
+                        ipcRenderer.send('user-login', { user: 'guest', type: 'local' });
+                    } else {
+                        window.location.href = 'desktop.html';
+                    }
+                }, 1000);
+                return;
+            }
+
+            if (!password) {
+                showMessage('Please enter your password', true);
+                return;
+            }
+
+            // Simulate authentication
+            showMessage('Authenticating...', false);
+            
+            setTimeout(() => {
+                // In a real system, this would verify against stored credentials
+                if (password === 'traxx' || password === 'admin') {
+                    showMessage('Welcome to Traxx X Code OS!', false);
+                    setTimeout(() => {
+                        if (typeof require !== 'undefined') {
+                            const { ipcRenderer } = require('electron');
+                            ipcRenderer.send('user-login', { user: selectedUser, type: 'local' });
+                        } else {
+                            window.location.href = 'desktop.html';
+                        }
+                    }, 500);
+                } else {
+                    showMessage('Incorrect password. Try "traxx" or "admin"', true);
+                }
+            }, 800);
+        }
+
+        // Enter key to login
+        document.getElementById('password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') attemptLogin();
+        });
+
+        // Other functions
+        function forgotPassword() {
+            showMessage('Password recovery requires Traxx Cloud connection', true);
+        }
+
+        function switchToCloudLogin() {
+            showMessage('Opening Traxx Cloud authentication...', false);
+            // Would open cloud login dialog
+        }
+
+        function showAccessibility() {
+            showMessage('Accessibility options coming soon', false);
+        }
+
+        function restartSystem() {
+            if (confirm('Restart the system?')) {
+                showMessage('Restarting...', false);
+            }
+        }
+
+        function shutdownSystem() {
+            if (confirm('Shut down the system?')) {
+                showMessage('Shutting down...', false);
+            }
+        }
+    </script>
+</body>
+</html>

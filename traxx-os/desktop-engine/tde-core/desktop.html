@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traxx Desktop Engine</title>
+    <link rel="stylesheet" href="desktop.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Desktop Area -->
+    <div id="desktop" class="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" data-app="files">
+                <div class="icon-image">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <span class="icon-label">Files</span>
+            </div>
+            <div class="desktop-icon" data-app="browser">
+                <div class="icon-image">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <span class="icon-label">Browser</span>
+            </div>
+            <div class="desktop-icon" data-app="terminal">
+                <div class="icon-image">
+                    <i class="fas fa-terminal"></i>
+                </div>
+                <span class="icon-label">Terminal</span>
+            </div>
+            <div class="desktop-icon" data-app="code-editor">
+                <div class="icon-image">
+                    <i class="fas fa-code"></i>
+                </div>
+                <span class="icon-label">CodeForge</span>
+            </div>
+            <div class="desktop-icon" data-app="sync-player">
+                <div class="icon-image">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <span class="icon-label">Sync Player</span>
+            </div>
+            <div class="desktop-icon" data-app="traxx-store">
+                <div class="icon-image">
+                    <i class="fas fa-store"></i>
+                </div>
+                <span class="icon-label">Traxx Store</span>
+            </div>
+            <div class="desktop-icon" data-app="traxx-ai">
+                <div class="icon-image">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <span class="icon-label">Traxx AI</span>
+            </div>
+            <div class="desktop-icon" data-app="settings">
+                <div class="icon-image">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <span class="icon-label">Settings</span>
+            </div>
+        </div>
+
+        <!-- Window Container -->
+        <div id="windows-container" class="windows-container">
+            <!-- Windows will be dynamically created here -->
+        </div>
+
+        <!-- Traxx AI Widget -->
+        <div id="traxx-ai-widget" class="ai-widget minimized">
+            <div class="ai-widget-header">
+                <span class="ai-widget-title">
+                    <i class="fas fa-robot"></i> Traxx AI
+                </span>
+                <div class="ai-widget-controls">
+                    <button class="widget-btn minimize-btn"><i class="fas fa-minus"></i></button>
+                    <button class="widget-btn expand-btn"><i class="fas fa-expand"></i></button>
+                </div>
+            </div>
+            <div class="ai-widget-content">
+                <div class="ai-chat-messages" id="ai-chat-messages">
+                    <div class="ai-message system">
+                        <p>Hello! I'm Traxx AI, your intelligent assistant. How can I help you today?</p>
+                    </div>
+                </div>
+                <div class="ai-input-area">
+                    <input type="text" id="ai-input" placeholder="Ask Traxx AI..." autocomplete="off">
+                    <button id="ai-send-btn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Launcher (Start Menu) -->
+    <div id="app-launcher" class="app-launcher hidden">
+        <div class="launcher-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="launcher-search-input" placeholder="Search apps, files, settings...">
+        </div>
+        <div class="launcher-content">
+            <div class="launcher-section">
+                <h3>Pinned Apps</h3>
+                <div class="launcher-grid" id="pinned-apps">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+            <div class="launcher-section">
+                <h3>All Apps</h3>
+                <div class="launcher-grid" id="all-apps">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+            <div class="launcher-section">
+                <h3>Quick Actions</h3>
+                <div class="quick-actions">
+                    <button class="quick-action" data-action="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </button>
+                    <button class="quick-action" data-action="files">
+                        <i class="fas fa-folder"></i>
+                        <span>Files</span>
+                    </button>
+                    <button class="quick-action" data-action="terminal">
+                        <i class="fas fa-terminal"></i>
+                        <span>Terminal</span>
+                    </button>
+                    <button class="quick-action" data-action="traxx-ai">
+                        <i class="fas fa-robot"></i>
+                        <span>Traxx AI</span>
+                    </button>
+                    <button class="quick-action" data-action="app-store">
+                        <i class="fas fa-store"></i>
+                        <span>App Store</span>
+                    </button>
+                    <button class="quick-action" data-action="cloud">
+                        <i class="fas fa-cloud"></i>
+                        <span>Cloud</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="launcher-user">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-info">
+                <span class="user-name">Traxx User</span>
+                <span class="user-status">Online</span>
+            </div>
+            <button class="power-btn" id="power-button">
+                <i class="fas fa-power-off"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Traxx Bar (Taskbar) -->
+    <div id="traxx-bar" class="traxx-bar">
+        <div class="bar-left">
+            <button id="launcher-btn" class="launcher-button">
+                <div class="traxx-logo">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+            </button>
+            <div class="pinned-apps-bar">
+                <button class="taskbar-app" data-app="browser" title="Browser">
+                    <i class="fas fa-globe"></i>
+                </button>
+                <button class="taskbar-app" data-app="terminal" title="Terminal">
+                    <i class="fas fa-terminal"></i>
+                </button>
+                <button class="taskbar-app" data-app="files" title="Files">
+                    <i class="fas fa-folder"></i>
+                </button>
+                <button class="taskbar-app" data-app="code-editor" title="CodeForge">
+                    <i class="fas fa-code"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="bar-center">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="global-search" placeholder="Search Traxx OS...">
+            </div>
+        </div>
+
+        <div class="bar-right">
+            <div class="system-tray">
+                <button class="tray-icon" id="traxx-ai-toggle" title="Traxx AI">
+                    <i class="fas fa-robot"></i>
+                </button>
+                <button class="tray-icon" id="network-toggle" title="Network">
+                    <i class="fas fa-wifi"></i>
+                </button>
+                <button class="tray-icon" id="volume-toggle" title="Volume">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="tray-icon" id="battery-toggle" title="Battery">
+                    <i class="fas fa-battery-full"></i>
+                </button>
+                <div class="tray-separator"></div>
+                <div class="datetime">
+                    <span class="time" id="current-time">00:00</span>
+                    <span class="date" id="current-date">Jan 1</span>
+                </div>
+            </div>
+            <button class="show-desktop-btn" id="show-desktop" title="Show Desktop">
+                <div class="show-desktop-indicator"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- System Notifications -->
+    <div id="notification-center" class="notification-center">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <button class="clear-all-btn">Clear All</button>
+        </div>
+        <div class="notification-list" id="notification-list">
+            <!-- Notifications will appear here -->
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="context-menu" class="context-menu hidden">
+        <div class="context-item" data-action="new-folder">
+            <i class="fas fa-folder-plus"></i> New Folder
+        </div>
+        <div class="context-item" data-action="new-file">
+            <i class="fas fa-file-plus"></i> New File
+        </div>
+        <div class="context-separator"></div>
+        <div class="context-item" data-action="paste">
+            <i class="fas fa-paste"></i> Paste
+        </div>
+        <div class="context-separator"></div>
+        <div class="context-item" data-action="terminal">
+            <i class="fas fa-terminal"></i> Open Terminal Here
+        </div>
+        <div class="context-item" data-action="settings">
+            <i class="fas fa-cog"></i> Display Settings
+        </div>
+        <div class="context-item" data-action="wallpaper">
+            <i class="fas fa-image"></i> Change Wallpaper
+        </div>
+        <div class="context-separator"></div>
+        <div class="context-item" data-action="about">
+            <i class="fas fa-info-circle"></i> About Traxx OS
+        </div>
+    </div>
+
+    <script src="desktop.js"></script>
+</body>
+</html>

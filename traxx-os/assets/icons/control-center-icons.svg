@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400">
+  <!-- WiFi Icon -->
+  <symbol id="wifi" viewBox="0 0 24 24">
+    <path d="M5 12.55a11 11 0 0 1 14.08 0" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M1.42 9a16 16 0 0 1 21.16 0" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M8.53 16.11a6 6 0 0 1 6.95 0" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="20" r="1" fill="currentColor"/>
+  </symbol>
+
+  <!-- Bluetooth Icon -->
+  <symbol id="bluetooth" viewBox="0 0 24 24">
+    <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- AirDrop Icon -->
+  <symbol id="airdrop" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="12" r="4" fill="currentColor"/>
+  </symbol>
+
+  <!-- Airplane Icon -->
+  <symbol id="airplane" viewBox="0 0 24 24">
+    <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="currentColor"/>
+  </symbol>
+
+  <!-- Mobile Data Icon -->
+  <symbol id="mobile-data" viewBox="0 0 24 24">
+    <rect x="5" y="2" width="14" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="18" x2="12" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Hotspot Icon -->
+  <symbol id="hotspot" viewBox="0 0 24 24">
+    <path d="M12 5a7 7 0 0 1 7 7" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M12 9a3 3 0 0 1 3 3" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+  </symbol>
+
+  <!-- VPN Icon -->
+  <symbol id="vpn" viewBox="0 0 24 24">
+    <rect x="3" y="11" width="18" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Brightness Icon -->
+  <symbol id="brightness" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"/>
+    <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"/>
+    <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Volume Icon -->
+  <symbol id="volume" viewBox="0 0 24 24">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Mute Icon -->
+  <symbol id="mute" viewBox="0 0 24 24">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="23" y1="9" x2="17" y2="15" stroke="currentColor" stroke-width="2"/>
+    <line x1="17" y1="9" x2="23" y2="15" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Do Not Disturb Icon -->
+  <symbol id="dnd" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Sleep Icon -->
+  <symbol id="sleep" viewBox="0 0 24 24">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Night Light Icon -->
+  <symbol id="night-light" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"/>
+    <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"/>
+    <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Focus Icon -->
+  <symbol id="focus" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="12" r="3" fill="currentColor"/>
+  </symbol>
+
+  <!-- Camera Icon -->
+  <symbol id="camera" viewBox="0 0 24 24">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="13" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Microphone Icon -->
+  <symbol id="microphone" viewBox="0 0 24 24">
+    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/>
+    <line x1="8" y1="23" x2="16" y2="23" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Location Icon -->
+  <symbol id="location" viewBox="0 0 24 24">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Screen Mirroring Icon -->
+  <symbol id="screen-mirror" viewBox="0 0 24 24">
+    <rect x="2" y="3" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Battery Icon -->
+  <symbol id="battery" viewBox="0 0 24 24">
+    <rect x="1" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="23" y1="10" x2="23" y2="14" stroke="currentColor" stroke-width="2"/>
+    <rect x="3" y="8" width="10" height="8" fill="currentColor"/>
+  </symbol>
+
+  <!-- Low Power Icon -->
+  <symbol id="low-power" viewBox="0 0 24 24">
+    <rect x="1" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="23" y1="10" x2="23" y2="14" stroke="currentColor" stroke-width="2"/>
+    <rect x="3" y="8" width="5" height="8" fill="currentColor"/>
+  </symbol>
+
+  <!-- Display Icon -->
+  <symbol id="display" viewBox="0 0 24 24">
+    <rect x="2" y="3" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Storage Icon -->
+  <symbol id="storage" viewBox="0 0 24 24">
+    <ellipse cx="12" cy="5" rx="9" ry="3" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- User Icon -->
+  <symbol id="user" viewBox="0 0 24 24">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Power Icon -->
+  <symbol id="power" viewBox="0 0 24 24">
+    <path d="M18.36 6.64a9 9 0 1 1-12.73 0" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="2" x2="12" y2="12" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Restart Icon -->
+  <symbol id="restart" viewBox="0 0 24 24">
+    <polyline points="23 4 23 10 17 10" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Shutdown Icon -->
+  <symbol id="shutdown" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+    <line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Lock Icon -->
+  <symbol id="lock" viewBox="0 0 24 24">
+    <rect x="3" y="11" width="18" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Unlock Icon -->
+  <symbol id="unlock" viewBox="0 0 24 24">
+    <rect x="3" y="11" width="18" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M7 11V7a5 5 0 0 1 9.9-1" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Example usages with colors -->
+  <use href="#wifi" x="5" y="5" width="20" height="20" style="color: #ff6b00"/>
+  <use href="#bluetooth" x="35" y="5" width="20" height="20" style="color: #2196f3"/>
+  <use href="#airplane" x="65" y="5" width="20" height="20" style="color: #00c853"/>
+  <use href="#brightness" x="95" y="5" width="20" height="20" style="color: #ffc107"/>
+  <use href="#volume" x="125" y="5" width="20" height="20" style="color: #ff6b00"/>
+  <use href="#battery" x="155" y="5" width="20" height="20" style="color: #00c853"/>
+</svg>

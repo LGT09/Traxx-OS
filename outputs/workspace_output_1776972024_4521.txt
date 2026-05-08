@@ -1,0 +1,17 @@
+total 32
+drwxr-xr-x  8 root root 4096 Apr 23 19:19 .
+drwxr-xr-x 11 root root 4096 Apr 21 22:22 ..
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 browser
+drwxr-xr-x  2 root root 4096 Apr 23 19:19 calculator
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 code-editor
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 file-manager
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 sync-player
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 terminal
+total 28
+drwxr-xr-x  7 root root 4096 Apr 21 20:43 .
+drwxr-xr-x 11 root root 4096 Apr 21 22:22 ..
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 boot-splash
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 fonts
+drwxr-xr-x  2 root root 4096 Apr 23 19:17 icons
+drwxr-xr-x  2 root root 4096 Apr 21 20:43 sounds
+drwxr-xr-x  2 root root 4096 Apr 23 19:16 wallpapers

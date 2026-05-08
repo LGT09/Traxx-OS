@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Widget - Traxx OS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: rgba(10, 10, 10, 0.85);
+            --bg-secondary: rgba(20, 20, 20, 0.9);
+            --bg-tertiary: rgba(30, 30, 30, 0.8);
+            --accent: #ff6b00;
+            --accent-hover: #ff8533;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-dim: #666666;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: transparent;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: flex-end;
+            padding: 80px 20px;
+        }
+
+        .weather-widget {
+            width: 320px;
+            background: var(--bg-primary);
+            backdrop-filter: blur(30px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .widget-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .location svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent);
+        }
+
+        .location-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .refresh-btn {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-tertiary);
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .current-weather {
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .weather-icon {
+            font-size: 64px;
+            margin-bottom: 10px;
+        }
+
+        .temperature {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+
+        .temperature span {
+            font-size: 24px;
+            color: var(--text-dim);
+        }
+
+        .condition {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .weather-details {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .detail-item svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hourly-forecast {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 11px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .hourly-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .hourly-item {
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .hourly-time {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        .hourly-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .hourly-temp {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .daily-forecast {
+            padding: 15px 20px;
+        }
+
+        .daily-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .daily-item:last-child {
+            border-bottom: none;
+        }
+
+        .daily-day {
+            width: 80px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .daily-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .daily-conditions {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .daily-condition {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .daily-rain {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #64b5f6;
+        }
+
+        .daily-temps {
+            display: flex;
+            gap: 10px;
+        }
+
+        .daily-high {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .daily-low {
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        .widget-footer {
+            padding: 15px 20px;
+            background: var(--bg-tertiary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .last-updated {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .attribution {
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+
+        /* Scrollbar */
+        .hourly-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .hourly-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .hourly-scroll::-webkit-scrollbar-thumb {
+            background: var(--text-dim);
+            border-radius: 2px;
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="weather-widget">
+        <div class="widget-header">
+            <div class="location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span class="location-name">Harare, Zimbabwe</span>
+            </div>
+            <button class="refresh-btn" onclick="refreshWeather()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"/>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="current-weather">
+            <div class="weather-icon" id="weatherIcon">☀️</div>
+            <div class="temperature">
+                <span id="tempValue">28</span><span>°C</span>
+            </div>
+            <div class="condition" id="condition">Sunny</div>
+            <div class="weather-details">
+                <div class="detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v2"/>
+                        <path d="M12 20v2"/>
+                        <path d="m4.93 4.93 1.41 1.41"/>
+                        <path d="m17.66 17.66 1.41 1.41"/>
+                        <path d="M2 12h2"/>
+                        <path d="M20 12h2"/>
+                        <path d="m6.34 17.66-1.41 1.41"/>
+                        <path d="m19.07 4.93-1.41 1.41"/>
+                    </svg>
+                    <span id="feelsLike">Feels like 30°</span>
+                </div>
+                <div class="detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                    </svg>
+                    <span id="humidity">Humidity 45%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hourly-forecast">
+            <div class="section-title">Hourly Forecast</div>
+            <div class="hourly-scroll" id="hourlyForecast">
+                <!-- Hourly items rendered here -->
+            </div>
+        </div>
+
+        <div class="daily-forecast">
+            <div class="section-title">7-Day Forecast</div>
+            <div id="dailyForecast">
+                <!-- Daily items rendered here -->
+            </div>
+        </div>
+
+        <div class="widget-footer">
+            <span class="last-updated">Updated: Just now</span>
+            <span class="attribution">Traxx Weather</span>
+        </div>
+    </div>
+
+    <script>
+        // Weather data
+        const hourlyData = [
+            { time: 'Now', temp: 28, icon: '☀️' },
+            { time: '2PM', temp: 29, icon: '🌤️' },
+            { time: '3PM', temp: 30, icon: '🌤️' },
+            { time: '4PM', temp: 29, icon: '⛅' },
+            { time: '5PM', temp: 27, icon: '⛅' },
+            { time: '6PM', temp: 25, icon: '🌅' },
+            { time: '7PM', temp: 23, icon: '🌙' },
+            { time: '8PM', temp: 21, icon: '🌙' },
+        ];
+
+        const dailyData = [
+            { day: 'Today', icon: '☀️', high: 30, low: 18, rain: 0 },
+            { day: 'Tomorrow', icon: '🌤️', high: 28, low: 17, rain: 10 },
+            { day: 'Wed', icon: '⛅', high: 26, low: 16, rain: 20 },
+            { day: 'Thu', icon: '🌧️', high: 24, low: 15, rain: 60 },
+            { day: 'Fri', icon: '🌧️', high: 22, low: 14, rain: 80 },
+            { day: 'Sat', icon: '⛅', high: 25, low: 15, rain: 30 },
+            { day: 'Sun', icon: '☀️', high: 28, low: 17, rain: 5 },
+        ];
+
+        // Render hourly forecast
+        function renderHourly() {
+            const container = document.getElementById('hourlyForecast');
+            container.innerHTML = hourlyData.map(item => `
+                <div class="hourly-item">
+                    <div class="hourly-time">${item.time}</div>
+                    <div class="hourly-icon">${item.icon}</div>
+                    <div class="hourly-temp">${item.temp}°</div>
+                </div>
+            `).join('');
+        }
+
+        // Render daily forecast
+        function renderDaily() {
+            const container = document.getElementById('dailyForecast');
+            container.innerHTML = dailyData.map(item => `
+                <div class="daily-item">
+                    <div class="daily-day">${item.day}</div>
+                    <div class="daily-icon">${item.icon}</div>
+                    <div class="daily-conditions">
+                        <div class="daily-rain">
+                            ${item.rain > 0 ? `
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                </svg>
+                                ${item.rain}%
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div class="daily-temps">
+                        <span class="daily-high">${item.high}°</span>
+                        <span class="daily-low">${item.low}°</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Refresh weather
+        function refreshWeather() {
+            // Simulate refresh
+            const temps = [26, 27, 28, 29, 30];
+            const newTemp = temps[Math.floor(Math.random() * temps.length)];
+            document.getElementById('tempValue').textContent = newTemp;
+            document.getElementById('feelsLike').textContent = `Feels like ${newTemp + 2}°`;
+        }
+
+        // Initialize
+        renderHourly();
+        renderDaily();
+    </script>
+</body>
+</html>
